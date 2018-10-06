@@ -14,12 +14,12 @@ function login(req,res) {
         if(err){
             return console.error('error fetching client from pool', err);	
         }
-        var query = "SELECT * FROM userJump WHERE email = $1"
+        var query = "SELECT * FROM userJump WHERE email = $1";
         client.query(query, [sess.email], function(err,result){
             if(err){
                 res.send({"msg": "error running query",
                             "error": err});
-                return console.log('error runing query', err);
+                return console.log('error running query', err);
             }
             if(result.rowCount == 0){
                 res.send({
