@@ -1,15 +1,35 @@
 const express = require('express');
 const router = express.Router();
-
+const verifyToken = require('../services/verifyToken');
+const showTokenInfo = require('../services/showTokenInfo');
 
 const {
-    login
+    login,
+    register,
+    loginClient
 }=require('../controllers/session');
 
-const {
-    registerUser
-} = require('../controllers/user');
+// const {
+// } = require('../controllers/user');
 
-router.route('/').post(login);
-router.route('/register').post(registerUser);
+const {
+    createJob,
+    selectJob,
+    deleteJob,
+    updateJob
+} = require('../controllers/job')
+
+//NOTA GLOBAL siempre antes de hacer una funcion usar verifyToken
+
+//user
+router.route('/').post(verifyToken,login,showTokenInfo);
+router.route('/register').post(register);
+
+//client
+router.route('/client').post(loginClient);
+
+//job
+router.route('/createJob').post(createJob);
+router.route('/selectJob').post(selectJob,showTokenInfo);
+router.route('/updateJob').post(updateJob);
 module.exports = router;

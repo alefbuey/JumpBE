@@ -1,12 +1,8 @@
-const pg = require('pg');
+const Sequelize = require('sequelize');
 
-const config = {
-    user: 'postgres',
-    database: 'Jump',
-    password: '1234',
-    port: 5432
-}
+//Inicio una conexion a la base de datos con sequelize
+const sequelize = new Sequelize('Jump2', 'postgres', '1234', {
+    dialect: 'postgres'
+  });
 
-const pool = new pg.Pool(config);
-
-module.exports = pool;
+module.exports = sequelize;
