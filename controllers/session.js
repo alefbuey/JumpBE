@@ -20,10 +20,12 @@ function login(req, res,next){
             return res.status(401).send ({success: false, token: null});
         } 
         
+        ///NOTA SI NO FUNCIONA HACERLO CON NEXT
         //para no reenviar la clave en el token
         user.password = 0;
-        //enviar todos los datos de la tabla usuario en el token
-        var token = jwt.sign(user, config.jwtSecret, {
+        var payload = {userData: user}
+        //enviar todos los datos del payload en el token
+        var token = jwt.sign(payload, config.jwtSecret, {
             expiresIn: config.tokenExpireTime
         });
         

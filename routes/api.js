@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../services/verifyToken');
+const {verifyToken} = require('../services/Token');
 const showTokenInfo = require('../services/showTokenInfo');
 
 const {
@@ -16,9 +16,15 @@ const {
     createJob,
     selectJob,
     deleteJob,
-    updateJob
-} = require('../controllers/job')
+    updateJob,
+    selectJobsByStateEmployer,
+    selectJobsByStateEmployee,
+    selectJobsByTime
+} = require('../controllers/job');
 
+const {
+    selectUserById
+} = require('../controllers/user');
 //NOTA GLOBAL siempre antes de hacer una funcion usar verifyToken
 
 //user
@@ -32,4 +38,8 @@ router.route('/client').post(loginClient);
 router.route('/createJob').post(createJob);
 router.route('/selectJob').post(selectJob,showTokenInfo);
 router.route('/updateJob').post(updateJob);
+router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
+router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);
+router.route('/feed').post(selectJobsByTime);
+router.route('/profile').post(selectUserById);
 module.exports = router;

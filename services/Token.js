@@ -17,4 +17,23 @@ function verifyToken(req, res, next) {
     next();
   });
 }
-module.exports = verifyToken;
+
+function transformToToken(req,res,next){
+  body = req.body;
+
+  if(!body){
+    return res.status(403).send('No body information');
+  }
+
+  var token = jwt.sign(body, config.jwtSecret, {
+    expiresIn: config.tokenExpireTime
+  });
+
+  return res.status(200).send({success: true, token: token}); 
+ 
+}
+
+module.exports = {
+  verifyToken: verifyToken,
+  transformToToken: transformToToken
+};

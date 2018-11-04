@@ -83,5 +83,9 @@ User.hasMany(Preference,{foreignKey: 'iduser'})
 module.exports={
     User: User,
     Employer: Employer,
-    Employee: Employee
+    Employee: Employee, 
+    LocationJump: LocationJump,
+    UserState: UserState,
+    NationalIdentifierType: NationalIdentifierType,
+    UserStaff: UserStaff,
 }

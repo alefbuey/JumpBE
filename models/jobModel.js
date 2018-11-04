@@ -6,8 +6,8 @@ const Job = sequelize.define('job',{
     id              :   {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
     idemployer      :	Sequelize.INTEGER,	
     mode            :	Sequelize.INTEGER,		
-    state           :	Sequelize.INTEGER,		
-    idlocation      :	Sequelize.INTEGER,		
+    state           :	{type: Sequelize.INTEGER, defaultValue: 1},		
+    idlocation      :	{type: Sequelize.INTEGER, defaultValue: 1},		
     title           :	Sequelize.STRING(100),	
     description     :	Sequelize.STRING(500),	
     jobcost         :	Sequelize.DECIMAL(9,2),	
@@ -37,7 +37,7 @@ const EmployeeState = sequelize.define('employeestate',{
 const EmployeeJob = sequelize.define('employeejob',{
     idemployee          :   {type: Sequelize.INTEGER, primaryKey: true},
     idjob	            :	{type: Sequelize.INTEGER, primaryKey: true},
-    state	            :	Sequelize.INTEGER,
+    state	            :	{type: Sequelize.INTEGER, defaultValue: 1},
     rankere	            :   Sequelize.DECIMAL(2,1),
     rankeer	            :	Sequelize.DECIMAL(2,1),
     salary	            :	Sequelize.DECIMAL(9,1),
@@ -61,8 +61,11 @@ Job.hasMany(FavoriteJob,{foreignKey: 'idjob'})
 
 module.exports = {
     Job: Job,
-    EmployeeJob, 
-    FavoriteJob
+    JobState: JobState,
+    JobMode: JobMode,
+    EmployeeState: EmployeeState,
+    EmployeeJob: EmployeeJob,
+    FavoriteJob: FavoriteJob
 }
 
 
