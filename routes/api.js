@@ -30,6 +30,7 @@ const {
 //user
 router.route('/').post(verifyToken,login,showTokenInfo);
 router.route('/register').post(register);
+router.route('/profile').post(selectUserById);
 
 //client
 router.route('/client').post(loginClient);
@@ -41,5 +42,4 @@ router.route('/updateJob').post(updateJob);
 router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
 router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);
 router.route('/feed').post(selectJobsByTime);
-router.route('/profile').post(selectUserById);
 module.exports = router;

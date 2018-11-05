@@ -73,10 +73,11 @@ function updateJob(req,res){
 }
 
 //FEED
-//Selecionar trabajos de acuerdo al tiempo, los ultimos 100 trabajos
+//Selecionar trabajos de acuerdo al tiempo, los ultimos 10 trabajos
 //Actualizar cada cierto tiempo
 function selectJobsByTime(req,res,next){
     body = req.body;
+    //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
     if(body.actualizar == 'true'){
         Job.findAll({
             limit: 10,
@@ -110,13 +111,15 @@ function selectJobsByStateEmployer(req,res,next){
     
     //Query de los trabajos posteados
     Job.findAll({
+        limit: 10,
         where:{
             idemployer: body.id, state: "1"
         },
         include: [{
             model: EmployeeJob ,
             required: true
-        }]
+        }],
+            order: [ [ 'updatedAt', 'DESC' ]]
     }).then(jobsPosted =>{
         if (!jobsPosted){
             return res.status(404).send ('Posted Jobs not found');
@@ -124,13 +127,15 @@ function selectJobsByStateEmployer(req,res,next){
 
         //Query de los trabajos en curso
         Job.findAll({
+            limit: 10,
             where:{
                 idemployer: body.id, state: "3"
             },
             include: [{
                 model: EmployeeJob ,
                 required: true
-            }]
+            }],
+            order: [ [ 'updatedAt', 'DESC' ]]
         }).then(jobsInCourse =>{
             if (!jobsInCourse){
                 return res.status(404).send ('Jobs In Course not found');
@@ -160,11 +165,13 @@ function selectJobsByStateEmployee(req,res,next){
 
     //Query de los trabajos en estado applying
     Job.findAll({
+        limit: 10,
         include: [{
             model: EmployeeJob,
             where:{idemployee: body.id, state: "1"},
             required: true
-        }]
+        }],
+        order: [ [ 'updatedAt', 'DESC' ]]
     }).then(Applyingjobs=>{
         if (!Applyingjobs){
             return res.status(404).send (' Applying Jobs not found');
@@ -172,11 +179,13 @@ function selectJobsByStateEmployee(req,res,next){
 
         //Query anidada de los trabajos en estado working
         Job.findAll({
+            limit: 10,
             include: [{
                 model: EmployeeJob,
                 where:{idemployee: body.id, state: "2"},
                 required: true
-            }]
+            }],
+            order: [ [ 'updatedAt', 'DESC' ]]
         }).then(WorkingJobs=>{
             if (!WorkingJobs){
                 return res.status(404).send (' Working Jobs not found');
@@ -196,9 +205,6 @@ function selectJobsByStateEmployee(req,res,next){
     }).catch(err => {
         return res.status(500).send ('Server Error with Applying Jobs');
     });
-
-
-    // Job.findAll({where: {id:}})
 }
 
 
