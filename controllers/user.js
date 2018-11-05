@@ -1,4 +1,6 @@
 const {User,LocationJump} = require('../models/userModel');
+const config =  require('../config/config');
+
 module.exports={
     selectUserById: selectUserById
 }
@@ -16,7 +18,14 @@ function selectUserById(req,res,next){
             return res.status(404).send (' User not found');
         }
 
-        return res.status(200).send(user);
+
+        if(config.desarrollo){
+            return res.status(200).send(user); 
+        }else{
+            req.body = user;
+            next();
+        }
+
     }).catch(err => {
         return res.status(500).send ('Server Error in selectUserById');
     });

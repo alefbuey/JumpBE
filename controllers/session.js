@@ -20,24 +20,18 @@ function login(req, res,next){
             return res.status(401).send ({success: false, token: null});
         } 
         
-        ///NOTA SI NO FUNCIONA HACERLO CON NEXT
         //para no reenviar la clave en el token
         user.password = 0;
-        var payload = {userData: user}
-        //enviar todos los datos del payload en el token
-        var token = jwt.sign(payload, config.jwtSecret, {
-            expiresIn: config.tokenExpireTime
-        });
         
         if(config.desarrollo){
-            req.body = token;
-            next();
+            return res.status(200).send(user); 
         }else{
-            return res.status(200).send({success: true, token: token}); 
+            req.body = user;
+            next();
         }
 
     }).catch(err => {
-        return res.status(500).send ('Server Error');
+        return res.status(500).send ('Server Error in Login');
     });
 }
 

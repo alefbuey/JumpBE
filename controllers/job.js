@@ -34,15 +34,12 @@ function selectJob(req,res,next){
         if (!job){
             return res.status(404).send ('Job not found');
         }
-        var token = jwt.sign(job, config.jwtSecret, {
-            expiresIn: config.tokenExpireTime
-        });
         
         if(config.desarrollo){
-            req.body = token;
-            next();
+            return res.status(200).send(job); 
         }else{
-            return res.status(200).send({success: true, token: token}); 
+            req.body = job;
+            next();
         }
     }).catch(err => {
         return res.status(500).send ('Server Error');
@@ -94,14 +91,18 @@ function selectJobsByTime(req,res,next){
                 return res.status(404).send ('Jobs not found');
             };
 
-            return res.status(200).send(jobs); 
+            if(config.desarrollo){
+                return res.status(200).send(jobs); 
+            }else{
+                req.body = jobs;
+                next();
+            }
 
         }).catch(err => {
         return res.status(500).send ('Server Error in Feed Jobs');
     });
     }
 }
-
 
 //EMPLEADOR O JEFE
 // Trabajos en espera y en curso de acuerdo al estado
@@ -146,7 +147,12 @@ function selectJobsByStateEmployer(req,res,next){
                 jobsInCourse : jobsInCourse
             }
 
-            return res.status(200).send(data);
+            if(config.desarrollo){
+                return res.status(200).send(data); 
+            }else{
+                req.body = data;
+                next();
+            }
 
         }).catch(err => {
             return res.status(500).send ('Server Error with Jobs In Course');
@@ -196,7 +202,12 @@ function selectJobsByStateEmployee(req,res,next){
                 WorkingJobs: WorkingJobs
             }
 
-            return res.status(200).send(data);
+            if(config.desarrollo){
+                return res.status(200).send(data); 
+            }else{
+                req.body = data;
+                next();
+            }
 
         }).catch(err => {
             return res.status(500).send ('Server Error with Working Jobs');
