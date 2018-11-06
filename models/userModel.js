@@ -3,7 +3,7 @@ const sequelize = require('../config/dbJump');
 const {Job, FavoriteJob, EmployeeJob} = require('../models/jobModel');
 const {Preference} = require('../models/categoryModel')
   // force: true will drop the table if it already exists
-  //User.sync({force: true});
+  
 
 
 const User = sequelize.define('userjumps', {

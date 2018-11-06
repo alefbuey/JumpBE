@@ -72,14 +72,47 @@ function updateJob(req,res){
 //FEED
 //Selecionar trabajos de acuerdo al tiempo, los ultimos 10 trabajos
 //Actualizar cada cierto tiempo
+// function selectJobsByTime(req,res,next){
+//     body = req.body;
+//     //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
+//     if(body.actualizar == 'true'){
+//         Job.findAll({
+//             limit: 10,
+//             where : {
+//                 idemployer: {[Op.ne]: body.idUser},
+//             },
+//             include: [{
+//                 model: EmployeeJob ,
+//                 required: true
+//             }],
+//             order: [ [ 'updatedAt', 'DESC' ]]
+//         }).then(jobs =>{
+//             if (!jobs){
+//                 return res.status(404).send ('Jobs not found');
+//             };
+
+//             if(config.desarrollo){
+//                 return res.status(200).send(jobs); 
+//             }else{
+//                 req.body = jobs;
+//                 next();
+//             }
+
+//         }).catch(err => {
+//         return res.status(500).send ('Server Error in Feed Jobs');
+//     });
+//     }
+// }
+
 function selectJobsByTime(req,res,next){
-    body = req.body;
+    act = req.params.actualizar;
+    idUser = req.params.idUser;
     //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
-    if(body.actualizar == 'true'){
+    if(act == 'true'){
         Job.findAll({
             limit: 10,
             where : {
-                idemployer: {[Op.ne]: body.idUser},
+                idemployer: {[Op.ne]: idUser},
             },
             include: [{
                 model: EmployeeJob ,

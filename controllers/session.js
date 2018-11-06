@@ -15,7 +15,7 @@ function login(req, res,next){
         if (!user){
             return res.status(404).send ('Authentication failed. Wrong password.');
         }
-
+        console.log({pass: req.body.password, p : user.password})
         if (!bcrypt.compareSync (req.body.password, user.password)){
             return res.status(401).send ({success: false, token: null});
         } 
@@ -24,7 +24,7 @@ function login(req, res,next){
         user.password = 0;
         
         if(config.desarrollo){
-            return res.status(200).send(user); 
+            return res.status(200).send({status: "success", user: user}); 
         }else{
             req.body = user;
             next();
@@ -65,6 +65,7 @@ function register(req, res){
         //retorno mensaje de exito
         return res.status(200).send("Successful Creation");
     }).catch(err => {
+        console.log(err);
         return res.status(500).send ('Server Error');
     });
 

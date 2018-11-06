@@ -30,7 +30,7 @@ const {
 
 if(config.desarrollo){
     //user
-    router.route('/').post(login);
+    router.route('/login').post(login);
     router.route('/register').post(register);
     router.route('/profile').post(selectUserById);
 
@@ -40,10 +40,12 @@ if(config.desarrollo){
     router.route('/updateJob').post(updateJob);
     router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
     router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);
-    router.route('/feed').post(selectJobsByTime);
+    //router.route('/feed').post(selectJobsByTime);
+    router.route('/feed/:actualizar/:idUser').get(selectJobsByTime);
+
 }else{
     //user
-    router.route('/').post(verifyToken,login,transformToToken);
+    router.route('/login').post(verifyToken,login,transformToToken);
     router.route('/register').post(verifyToken,register);
     router.route('/profile').post(verifyToken,selectUserById,transformToToken);
 
