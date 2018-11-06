@@ -61,9 +61,6 @@ const Employee = sequelize.define('employee',{
     numbjobsdone    :  {type: Sequelize.INTEGER, defaultValue: 0}
 });
 
-//Sincornizar con la base de datos
-//sequelize.sync({force: true})
-
 
 //Relaciones
 LocationJump.hasMany(User,{ foreignKey: 'idlocation'});

@@ -5,16 +5,18 @@ Descomentar la linea 65 en userModels.js
     sequelize.sync({force: true})
 
 Correr una vez el programa y volver a comentar. Adicionalmente, puedes correr el JumpPrueba.sql para tener
-datos con los cuales probar la aplicación
+datos con los cuales probar la aplicación. Además en esta parte se encuentran algunos triggers necesarios.
 
 ## CRUD de user
 
 ##select
 
-Esta parte es algo diferente porque requiere informacion del lado del cliente que se
-envia en un token
-
-
+```json
+{ 
+"email"	:	"felipe96@gmail.com",	
+"password" : "f1234"
+}
+```
 ##create
 ```json
 
