@@ -3,6 +3,9 @@ const {User,Employer,UserStaff} = require('../models/userModel');
 const config =  require('../config/config');
 const jwt = require('jsonwebtoken');
 const {Op} = require('sequelize');
+const sequelize = require('../config/dbJump');
+const {zip} = require('../extra/functional');
+const {zipwith} = require("zipwith");
 
 module.exports={
     selectJob: selectJob,
@@ -64,41 +67,8 @@ function updateJob(req,res){
 
 }
 
+
 //FEED
-//Selecionar trabajos de acuerdo al tiempo, los ultimos 10 trabajos
-//Actualizar cada cierto tiempo
-// function selectJobsByTime(req,res,next){
-//     body = req.body;
-//     //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
-//     if(body.actualizar == 'true'){
-//         Job.findAll({
-//             limit: 10,
-//             where : {
-//                 idemployer: {[Op.ne]: body.idUser},
-//             },
-//             include: [{
-//                 model: EmployeeJob ,
-//                 required: true
-//             }],
-//             order: [ [ 'updatedAt', 'DESC' ]]
-//         }).then(jobs =>{
-//             if (!jobs){
-//                 return res.status(404).send ('Jobs not found');
-//             };
-
-//             if(config.desarrollo){
-//                 return res.status(200).send(jobs); 
-//             }else{
-//                 req.body = jobs;
-//                 next();
-//             }
-
-//         }).catch(err => {
-//         return res.status(500).send ('Server Error in Feed Jobs');
-//     });
-//     }
-// }
-
 function selectJobsByTime(req,res,next){
     act = req.params.actualizar;
     idUser = req.params.idUser;
@@ -119,21 +89,20 @@ function selectJobsByTime(req,res,next){
                 return res.status(404).send ('Jobs not found');
             };
 
-            var json = JSON.parse(JSON.stringify(jobs));
+            var sql = 'SELECT us.* FROM jobs as j INNER JOIN userstaffs as us ON (j.idemployer = us.iduser)';
+            sequelize.query(sql,{model: UserStaff}).then(userStaffs=>{
+                if(!userStaffs){
+                    return res.status(404).send ('UserStaffs not found');
+                }
+                var data = zipwith(function(a,b){return c = {userStaff:a,job:b}},userStaffs,jobs);
 
-            jobs.map(job => {UserStaff.findOne({where: {iduser: job.idemployer}}).then(userstaff =>{
-                    job.userstaff = userstaff;
-                })
+                if(config.desarrollo){
+                    return res.status(200).send(data); 
+                }else{
+                    req.body = json;
+                    next();
+                }
             })
-            //console.log(jobs[0])
-
-
-            if(config.desarrollo){
-                return res.status(200).send(json); 
-            }else{
-                req.body = json;
-                next();
-            }
 
         }).catch(err => {
         return res.status(500).send (err);
@@ -254,5 +223,4 @@ function selectJobsByStateEmployee(req,res,next){
         return res.status(500).send ('Server Error with Applying Jobs');
     });
 }
-
 

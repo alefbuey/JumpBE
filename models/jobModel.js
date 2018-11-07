@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbJump');
+const {UserStaff} = require('../models/userModel');
 
 //modelos del trabajo
 const Job = sequelize.define('job',{
@@ -57,7 +58,6 @@ JobState.hasMany(Job,{foreignKey: 'state'});
 EmployeeState.hasMany(EmployeeJob,{foreignKey: 'state'});
 Job.hasMany(EmployeeJob,{foreignKey: 'idjob'});
 Job.hasMany(FavoriteJob,{foreignKey: 'idjob'})
-
 
 module.exports = {
     Job: Job,
