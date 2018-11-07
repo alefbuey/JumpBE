@@ -1,5 +1,5 @@
 const {Job,EmployeeJob,JobMode,JobState,EmployeeState} = require('../models/jobModel');
-const {Employer} = require('../models/userModel');
+const {User,Employer,UserStaff} = require('../models/userModel');
 const config =  require('../config/config');
 const jwt = require('jsonwebtoken');
 const {Op} = require('sequelize');
@@ -56,17 +56,12 @@ function updateJob(req,res){
     body = req.body;    //dos secciones del cuerpo una con el id y la otros los datos a editar
     datos = body.updateData;
 
-    Job.findOne({where:{id: body.id}}).then(job => {
-
-        job.update(datos).then(()=>{
-            return res.status(200).send("Successful Creation");
-        }).catch(err => {
-            return res.status(500).send ('Server Error');
-        });
-
+    Job.update(datos,{where:{id: body.id}}).then(()=>{
+        return res.status(200).send("Successful Update");
     }).catch(err => {
-        return res.status(500).send ('Server Error');
+        return res.status(500).send ('Server Error Updated Job');
     });
+
 }
 
 //FEED
@@ -115,7 +110,7 @@ function selectJobsByTime(req,res,next){
                 idemployer: {[Op.ne]: idUser},
             },
             include: [{
-                model: EmployeeJob ,
+                model: EmployeeJob,
                 required: true
             }],
             order: [ [ 'updatedAt', 'DESC' ]]
@@ -124,15 +119,24 @@ function selectJobsByTime(req,res,next){
                 return res.status(404).send ('Jobs not found');
             };
 
+            var json = JSON.parse(JSON.stringify(jobs));
+
+            jobs.map(job => {UserStaff.findOne({where: {iduser: job.idemployer}}).then(userstaff =>{
+                    job.userstaff = userstaff;
+                })
+            })
+            //console.log(jobs[0])
+
+
             if(config.desarrollo){
-                return res.status(200).send(jobs); 
+                return res.status(200).send(json); 
             }else{
-                req.body = jobs;
+                req.body = json;
                 next();
             }
 
         }).catch(err => {
-        return res.status(500).send ('Server Error in Feed Jobs');
+        return res.status(500).send (err);
     });
     }
 }

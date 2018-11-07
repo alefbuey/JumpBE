@@ -1,11 +1,11 @@
 ## Para crear la base de de datos
 
-Descomentar la linea 65 en userModels.js
+Descomentar la linea en dbJump.js
 
     sequelize.sync({force: true})
 
-Correr una vez el programa y volver a comentar. Adicionalmente, puedes correr el JumpPrueba.sql para tener
-datos con los cuales probar la aplicación. Además en esta parte se encuentran algunos triggers necesarios.
+Correr una vez el programa y volver a comentar. Adicionalmente, correr el JumpPrueba.sql para tener
+datos con los cuales probar la aplicación. Además, en esta parte se encuentran algunos triggers necesarios.
 
 ## CRUD de user
 
