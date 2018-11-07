@@ -8,6 +8,7 @@ const app = express();
 const port = 3000;
 
 //Body parser middleware
+app.use('/uploads',express.static('uploads'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 

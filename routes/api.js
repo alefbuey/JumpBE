@@ -3,6 +3,7 @@ const router = express.Router();
 const {verifyToken,transformToToken} = require('../services/Token');
 const showTokenInfo = require('../services/showTokenInfo');
 const config =  require('../config/config');
+const {uploadProfile} = require('../services/imageProcess');
 
 const {
     login,
@@ -24,7 +25,9 @@ const {
 } = require('../controllers/job');
 
 const {
-    selectUserById
+    selectUserById,
+    updateUserById,
+    updateUserStaffById
 } = require('../controllers/user');
 //NOTA GLOBAL siempre antes de hacer una funcion usar verifyToken
 
@@ -33,6 +36,8 @@ if(config.desarrollo){
     router.route('/login').post(login);
     router.route('/register').post(register);
     router.route('/profile').post(selectUserById);
+    router.route('/updateUser').post(updateUserById);
+    router.route('/updateUserStaff').post(uploadProfile.single('image'),updateUserStaffById);
 
     //job
     router.route('/createJob').post(createJob);

@@ -42,9 +42,9 @@ const NationalIdentifierType = sequelize.define('nationalidentifiertype',{
 });
 
 const UserStaff = sequelize.define('userstaff',{
-    idusers     : {type: Sequelize.INTEGER, primaryKey: true},
+    iduser     : {type: Sequelize.INTEGER, primaryKey: true},
     about       : Sequelize.STRING(500),
-    image       : Sequelize.BLOB, //para guardar las imagenes
+    image       : Sequelize.STRING, //para guardar las imagenes
     cellphone   : Sequelize.STRING(20)
 });
 
