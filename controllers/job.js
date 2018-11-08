@@ -1,4 +1,4 @@
-const {Job,EmployeeJob,JobMode,JobState,EmployeeState} = require('../models/jobModel');
+const {Job,EmployeeJob,JobStaff} = require('../models/jobModel');
 const {User,Employer,UserStaff} = require('../models/userModel');
 const config =  require('../config/config');
 const jwt = require('jsonwebtoken');
@@ -14,7 +14,10 @@ module.exports={
     updateJob: updateJob,
     selectJobsByStateEmployer: selectJobsByStateEmployer,
     selectJobsByStateEmployee: selectJobsByStateEmployee,
-    selectJobsByTime: selectJobsByTime
+    selectJobsByTime: selectJobsByTime,
+    createJobStaff: createJobStaff,
+    applyingToJob: applyingToJob,
+    changeStateEmployeeJob: changeStateEmployeeJob
 }
 
 
@@ -22,31 +25,69 @@ module.exports={
 //Crear un trabajo
 function createJob(req,res,next){
     body = req.body;
-
     Job.create(body).then(()=>{
         return res.status(200).send("Successful Creation");
 
     });
-
 }
 
-//Mostrar informacion de trabajo
+function createJobStaff(req,res,next){
+    body = req.body;
+    body.image = req.file.path
+
+    JobStaff.create(body).then(() =>{
+        return res.status(200).send("Successful Creation");
+    }).catch(err => {
+        return res.status(500).send ('Server Error in createJobStaff');
+    });
+}
+
+//Mostrar informacion de trabajo fisico
 function selectJob(req,res,next){
     body = req.body; //el token entrante tendra informacion acerca del idusuario, idtrabajo
-    Job.findOne({where:{id: body.id /*, idemployer: body.idemployer*/}, raw: true}).then(job =>{
-        if (!job){
-            return res.status(404).send ('Job not found');
-        }
-        
-        if(config.desarrollo){
-            return res.status(200).send(job); 
-        }else{
-            req.body = job;
-            next();
-        }
-    }).catch(err => {
-        return res.status(500).send ('Server Error');
-    });
+    if(body.mode == "fisico"){
+        Job.findOne({
+            where:{
+                id: body.id
+            },         
+            include: [{
+                model: JobStaff,
+                required: true
+            }]
+        }).then(job =>{
+            if (!job){
+                return res.status(404).send ('Job not found');
+            }
+            
+            if(config.desarrollo){
+                return res.status(200).send(job); 
+            }else{
+                req.body = job;
+                next();
+            }
+        }).catch(err => {
+            return res.status(500).send ('Server Error in Select Job');
+        });
+    }else{
+        Job.findOne({
+            where:{
+                id: body.id
+            }
+        }).then(job =>{
+            if (!job){
+                return res.status(404).send ('Job not found');
+            }
+            
+            if(config.desarrollo){
+                return res.status(200).send(job); 
+            }else{
+                req.body = job;
+                next();
+            }
+        }).catch(err => {
+            return res.status(500).send ('Server Error in Select Job');
+        });
+    }
 }
 
 //Borrar un trabajo //Como deberiamos abordarlo? Preguntar?
@@ -66,7 +107,6 @@ function updateJob(req,res){
     });
 
 }
-
 
 //FEED
 function selectJobsByTime(req,res,next){
@@ -108,6 +148,32 @@ function selectJobsByTime(req,res,next){
         return res.status(500).send (err);
     });
     }
+}
+
+//APLICAR A UN TRABAJO
+
+function applyingToJob(req,res,next){
+    body = req.body;
+
+    EmployeeJob.create(body).then(()=>{
+        return res.status(200).send("Successful Applying");
+    })
+
+} 
+
+//ACEPTADO EN EL TRABAJO Y TERMINANDO TRABAJO
+
+function changeStateEmployeeJob(req,res,next){
+    body = req.body;
+    EmployeeJob.update(
+        body,
+        {where: 
+            {idemployee: body.idemployee, 
+                idjob: body.idjob}
+            }).then(()=>{
+                return res.status(200).send("Succesfull Chage State of EmployeeJob")
+            })
+
 }
 
 //EMPLEADOR O JEFE

@@ -74,11 +74,11 @@ insert into NationalIdentifierTypes values
 (default,'Passport',current_timestamp,current_timestamp);
 
 insert into UserJumps values
-(default,2,1,1,'123456789','Fernanda','Zapata','ferchz123@gmail.com','f123','1996-04-25','Quicentro Sur','F','Ecuadorian',1000.00,4.5,current_timestamp,current_timestamp),
-(default,3,2,1,'789465198','Camilo','Guitierrez','camilo566@gmail.com','c566','1998-04-25','Alameda','M','Ecuadorian',500.00,2.3,current_timestamp,current_timestamp),
-(default,2,3,1,'516549716','Laura','Rivera','laur894@gmail.com','l894','1995-03-21','Amaguaña','F','Ecuadorian',20.00,3.5,current_timestamp,current_timestamp),
-(default,2,1,2,'198952358','Enrique','Rivera','erivera879@gmail.com','e879','2000-05-17','Central Park','M','American',50.00,4.7,current_timestamp,current_timestamp),
-(default,3,1,1,'161698726','Jaime','Alban','jaimealba451@gmail.com','j451','1996-07-21','Iglesia de Veracruz','M','Colombian',700.00,4.0,current_timestamp,current_timestamp);
+(default,2,1,1,'123456789','Fernanda','Zapata','ferchz123@gmail.com','1234','1996-04-25','Quicentro Sur','F','Ecuadorian',1000.00,4.5,current_timestamp,current_timestamp),
+(default,3,2,1,'789465198','Camilo','Guitierrez','camilo566@gmail.com','1234','1998-04-25','Alameda','M','Ecuadorian',500.00,2.3,current_timestamp,current_timestamp),
+(default,2,3,1,'516549716','Laura','Rivera','laur894@gmail.com','l894','1234-03-21','Amaguaña','F','Ecuadorian',20.00,3.5,current_timestamp,current_timestamp),
+(default,2,1,2,'198952358','Enrique','Rivera','erivera879@gmail.com','1234','2000-05-17','Central Park','M','American',50.00,4.7,current_timestamp,current_timestamp),
+(default,3,1,1,'161698726','Jaime','Alban','jaimealba451@gmail.com','1234','1996-07-21','Iglesia de Veracruz','M','Colombian',700.00,4.0,current_timestamp,current_timestamp);
 
 update UserStaffs set 
 	about = 'Estudie en Yachay Tech. Ingeniero gradudado con conocimientos en Programacion Web, Inteligencia Artificial. Me considero una persona capaz de tomar nuevos retos e iniciativas',

@@ -3,7 +3,7 @@ const router = express.Router();
 const {verifyToken,transformToToken} = require('../services/Token');
 const showTokenInfo = require('../services/showTokenInfo');
 const config =  require('../config/config');
-const {uploadProfile} = require('../services/imageProcess');
+const {uploadProfile,uploadJobs} = require('../services/imageProcess');
 
 const {
     login,
@@ -21,7 +21,10 @@ const {
     updateJob,
     selectJobsByStateEmployer,
     selectJobsByStateEmployee,
-    selectJobsByTime
+    selectJobsByTime,
+    createJobStaff,
+    applyingToJob,
+    changeStateEmployeeJob
 } = require('../controllers/job');
 
 const {
@@ -46,6 +49,9 @@ if(config.desarrollo){
     router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
     router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);
     router.route('/feed/:actualizar/:idUser').get(selectJobsByTime);
+    router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
+    router.route('/applyingToJob').post(applyingToJob);
+    router.route('/changeStateEmployeeJob').post(changeStateEmployeeJob);
 
 }else{
     //user
