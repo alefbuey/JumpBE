@@ -46,7 +46,6 @@ function updateUserById(req,res,next){
 }
 
 function updateUserStaffById(req,res,next){
-    console.log(req.file);
     body = req.body;
     body.image = req.file.path
 

@@ -39,10 +39,10 @@ const EmployeeJob = sequelize.define('employeejob',{
     idemployee          :   {type: Sequelize.INTEGER, primaryKey: true},
     idjob	            :	{type: Sequelize.INTEGER, primaryKey: true},
     state	            :	{type: Sequelize.INTEGER, defaultValue: 1},
-    rankere	            :   Sequelize.DECIMAL(2,1),
-    rankeer	            :	Sequelize.DECIMAL(2,1),
+    rankEmployer	    :   Sequelize.DECIMAL(2,1),
+    rankEmployee        :	Sequelize.DECIMAL(2,1),
     salary	            :	Sequelize.DECIMAL(9,1),
-    counteroffer	    :	Sequelize.DECIMAL(2,1),
+    counteroffer	    :	Sequelize.DECIMAL(9,1),
     postedreason	    :	{type: Sequelize.TEXT, defaultValue : "Not Specified"},
     counterofferreason	:   {type: Sequelize.STRING(100), defaultValue : "Not Specified"}
 });
@@ -52,12 +52,19 @@ const FavoriteJob = sequelize.define('favoritejob',{
     idjob	            :	{type: Sequelize.INTEGER, primaryKey: true},
 });
 
+const JobStaff = sequelize.define('jobstaff',{
+    idimage     : {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
+    image       : Sequelize.STRING, //para guardar las imagenes
+    idjob       : Sequelize.INTEGER
+});
+
 //Relaciones
 JobMode.hasMany(Job,{foreignKey: 'mode'});
 JobState.hasMany(Job,{foreignKey: 'state'});
 EmployeeState.hasMany(EmployeeJob,{foreignKey: 'state'});
 Job.hasMany(EmployeeJob,{foreignKey: 'idjob'});
 Job.hasMany(FavoriteJob,{foreignKey: 'idjob'})
+Job.hasMany(JobStaff,{foreignKey: "idjob"});
 
 module.exports = {
     Job: Job,
@@ -65,7 +72,8 @@ module.exports = {
     JobMode: JobMode,
     EmployeeState: EmployeeState,
     EmployeeJob: EmployeeJob,
-    FavoriteJob: FavoriteJob
+    FavoriteJob: FavoriteJob,
+    JobStaff: JobStaff
 }
 
 
