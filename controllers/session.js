@@ -46,7 +46,6 @@ function register(req, res){
         
 
         var values = {
-            idlocation  : body.idlocation,
             name		: body.name,
             lastname	: body.lastname,
             birthdate	: body.birthdate,
@@ -57,13 +56,14 @@ function register(req, res){
             }
         
         //creo el usuario siguiendo el modelo y lo guarda en la base de datos
-        User.create(values,
+        newUser = User.create(values,
             function(err,user){
                 if (err) return res.status(500).send("There was a problem registering the user")
             }
-        )
-        //retorno mensaje de exito
-        return res.status(200).send("Successful Creation");
+        ).then(user => {
+             //retorno mensaje de exito
+            return res.status(200).send({status: 'success', user: user});
+        });
     }).catch(err => {
         console.log(err);
         return res.status(500).send ('Server Error');
