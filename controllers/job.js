@@ -138,6 +138,8 @@ function selectJobsByTime(req,res,next){
 
                 var data = zipwith(
                     function(user,job){return block = {
+                        idemployer: user.id,    //Para cargar el perfil del empleado una vez de click
+                        idjob: job.id,          //Para cargar la info del trabajo una vez de click
                         imageEmployer: user.image,
                         nameEmploye: user.name + " " + user.lastname,
                         title:  job.title,
