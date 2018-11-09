@@ -79,11 +79,6 @@ insert into UserJumps values
 (default,2,1,2,'198952358','Enrique','Rivera','erivera879@gmail.com','1234','2000-05-17','Central Park','M','American',50.00,4.7,default,default,default,current_timestamp,current_timestamp),
 (default,3,1,1,'161698726','Jaime','Alban','jaimealba451@gmail.com','1234','1996-07-21','Iglesia de Veracruz','M','Colombian',700.00,4.0,default,default,default,current_timestamp,current_timestamp);
 
-update UserStaffs set 
-	about = 'Estudie en Yachay Tech. Ingeniero gradudado con conocimientos en Programacion Web, Inteligencia Artificial. Me considero una persona capaz de tomar nuevos retos e iniciativas',
-	cellphone = '0984657213'
-	where idUser = 2;
-
 update Employees set ranking = 4.5, numbjobsdone = 8 where id = 1;
 update Employees set ranking = 3.5, numbjobsdone = 9 where id = 2;
 update Employees set ranking = 5.0, numbjobsdone = 15 where id = 3;
