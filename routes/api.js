@@ -31,6 +31,10 @@ const {
     selectUserById,
     updateUserById
 } = require('../controllers/user');
+
+const {
+    createComment
+} = require('../controllers/comment');
 //NOTA GLOBAL siempre antes de hacer una funcion usar verifyToken
 
 if(config.desarrollo){
@@ -38,7 +42,7 @@ if(config.desarrollo){
     router.route('/login').post(login);
     router.route('/register').post(register);
     router.route('/profile').post(selectUserById);
-    router.route('/updateUser').post(updateUserById);
+    router.route('/updateUser').post(uploadProfile.single('image'),updateUserById);
 
     //job
     router.route('/createJob').post(createJob);
@@ -50,6 +54,9 @@ if(config.desarrollo){
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
     router.route('/changeStateEmployeeJob').post(changeStateEmployeeJob);
+
+    //Comment
+    router.route('/createComment').post(createComment);
 
 }else{
     //user

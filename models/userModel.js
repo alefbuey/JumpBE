@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbJump');
 const {Job, FavoriteJob, EmployeeJob} = require('../models/jobModel');
-const {Preference} = require('../models/categoryModel')
+const {Preference} = require('../models/categoryModel');
+const {CommentUser} = require('../models/commentModel');
+
   // force: true will drop the table if it already exists
   
 
@@ -23,7 +25,7 @@ const User = sequelize.define('userjumps', {
     availablemoney          : {type: Sequelize.DECIMAL(9, 2), defaultValue: 0.0},
     rank                    : {type: Sequelize.DECIMAL(2, 1), defaultValue: 0.0},
     about                   : Sequelize.STRING(500),
-    image                   : Sequelize.STRING,
+    image                   : {type: Sequelize.STRING, defaultValue: "uploads/profiles/default.png"},
     cellphone               : Sequelize.STRING(20)
 });
 
@@ -65,10 +67,10 @@ NationalIdentifierType.hasMany(User,{foreignKey: 'typenationalidentifier'});
 User.hasOne(Employer,{ foreignKey: 'id'});
 Employer.hasMany(Job,{ foreignKey: 'idemployer'});
 User.hasOne(Employee,{foreignKey: "id"});
-Employee.hasMany(EmployeeJob,{foreignKey: 'idemployee'});
-Employee.hasMany(FavoriteJob,{foreignKey: 'idemployee'});
-User.hasMany(Preference,{foreignKey: 'iduser'})
-
+Employee.hasMany(EmployeeJob,{foreignKey: "idemployee"});
+Employee.hasMany(FavoriteJob,{foreignKey: "idemployee"});
+User.hasMany(Preference,{foreignKey: "iduser"})
+User.hasMany(CommentUser,{foreignKey: "iduser"})
 
 
 module.exports={
