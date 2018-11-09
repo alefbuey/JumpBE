@@ -5,7 +5,7 @@ var fs = require('fs');
 module.exports={
     selectUserById: selectUserById,
     updateUserById: updateUserById,
-    updateUserStaffById: updateUserStaffById
+    // updateUserStaffById: updateUserStaffById
 }
 
 //Seleccionar un usuario por id
@@ -45,16 +45,16 @@ function updateUserById(req,res,next){
     });
 }
 
-function updateUserStaffById(req,res,next){
-    body = req.body;
-    body.image = req.file.path
+// function updateUserStaffById(req,res,next){
+//     body = req.body;
+//     body.image = req.file.path
 
-    UserStaff.update(body,{where:{iduser: body.iduser}}).then(() =>{
-        return res.status(200).send("Successful Update");
-    }).catch(err => {
-        return res.status(500).send ('Server Error in Update UserStaff');
-    });
-}
+//     UserStaff.update(body,{where:{iduser: body.iduser}}).then(() =>{
+//         return res.status(200).send("Successful Update");
+//     }).catch(err => {
+//         return res.status(500).send ('Server Error in Update UserStaff');
+//     });
+// }
 
 // function up
 
