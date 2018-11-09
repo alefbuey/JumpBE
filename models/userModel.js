@@ -21,8 +21,10 @@ const User = sequelize.define('userjumps', {
     gender                  : Sequelize.STRING(1),
     nationality             : Sequelize.STRING(30),
     availablemoney          : {type: Sequelize.DECIMAL(9, 2), defaultValue: 0.0},
-    rank                    : {type: Sequelize.DECIMAL(2, 1), defaultValue: 0.0}
-
+    rank                    : {type: Sequelize.DECIMAL(2, 1), defaultValue: 0.0},
+    about                   : Sequelize.STRING(500),
+    image                   : Sequelize.STRING,
+    cellphone               : Sequelize.STRING(20)
 });
 
 const LocationJump = sequelize.define('location',{
@@ -39,13 +41,6 @@ const UserState = sequelize.define('userstate',{
 const NationalIdentifierType = sequelize.define('nationalidentifiertype',{
     id          : {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
     description : Sequelize.STRING(100)
-});
-
-const UserStaff = sequelize.define('userstaff',{
-    iduser     : {type: Sequelize.INTEGER, primaryKey: true},
-    about       : Sequelize.STRING(500),
-    image       : Sequelize.STRING, //para guardar las imagenes
-    cellphone   : Sequelize.STRING(20)
 });
 
 const Employer = sequelize.define('employer',{
@@ -67,7 +62,6 @@ LocationJump.hasMany(User,{ foreignKey: 'idlocation'});
 LocationJump.hasMany(Job,{foreignKey: 'idlocation'});
 UserState.hasMany(User,{foreignKey: 'idstate'});
 NationalIdentifierType.hasMany(User,{foreignKey: 'typenationalidentifier'});
-User.hasOne(UserStaff,{foreignKey: "iduser"});
 User.hasOne(Employer,{ foreignKey: 'id'});
 Employer.hasMany(Job,{ foreignKey: 'idemployer'});
 User.hasOne(Employee,{foreignKey: "id"});
@@ -84,5 +78,4 @@ module.exports={
     LocationJump: LocationJump,
     UserState: UserState,
     NationalIdentifierType: NationalIdentifierType,
-    UserStaff: UserStaff,
 }

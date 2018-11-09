@@ -1,5 +1,5 @@
 const {Job,EmployeeJob,JobStaff} = require('../models/jobModel');
-const {User,Employer,UserStaff} = require('../models/userModel');
+const {User,Employer} = require('../models/userModel');
 const config =  require('../config/config');
 const jwt = require('jsonwebtoken');
 const {Op} = require('sequelize');
@@ -109,6 +109,7 @@ function updateJob(req,res){
 }
 
 //FEED
+//Podria hacerlo en una sentencia sql, tomarlo en cuenta
 function selectJobsByTime(req,res,next){
     act = req.params.actualizar;
     idUser = req.params.idUser;
@@ -119,22 +120,35 @@ function selectJobsByTime(req,res,next){
             where : {
                 idemployer: {[Op.ne]: idUser},
             },
-            include: [{
-                model: EmployeeJob,
-                required: true
-            }],
             order: [ [ 'updatedAt', 'DESC' ]]
         }).then(jobs =>{
             if (!jobs){
                 return res.status(404).send ('Jobs not found');
             };
 
-            var sql = 'SELECT us.* FROM jobs as j INNER JOIN userstaffs as us ON (j.idemployer = us.iduser)';
-            sequelize.query(sql,{model: UserStaff}).then(userStaffs=>{
-                if(!userStaffs){
-                    return res.status(404).send ('UserStaffs not found');
+            var sql = 'SELECT us.* FROM jobs as j INNER JOIN userjumps as us ON (j.idemployer = us.id) and (us.id <> $1)';
+            sequelize.query(sql,
+                { bind: [idUser], type: sequelize.QueryTypes.SELECT},
+                {model: User}).then(users=>{
+                if(!users){
+                    return res.status(404).send ('Users not found');
                 }
-                var data = zipwith(function(a,b){return c = {userStaff:a,job:b}},userStaffs,jobs);
+                console.log(jobs[0].title);
+                console.log(users);
+
+                var data = zipwith(
+                    function(user,job){return block = {
+                        idemployer: user.id,    //Para cargar el perfil del empleado una vez de click
+                        idjob: job.id,          //Para cargar la info del trabajo una vez de click
+                        imageEmployer: user.image,
+                        nameEmploye: user.name + " " + user.lastname,
+                        title:  job.title,
+                        jobcost:    job.jobcost,
+                        dateposted: job.dateposted,
+                        numbervacancies: job.numbervacancies
+                    }
+                },users,jobs);
+
 
                 if(config.desarrollo){
                     return res.status(200).send(data); 
@@ -142,6 +156,7 @@ function selectJobsByTime(req,res,next){
                     req.body = json;
                     next();
                 }
+
             })
 
         }).catch(err => {

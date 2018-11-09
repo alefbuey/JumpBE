@@ -29,8 +29,7 @@ const {
 
 const {
     selectUserById,
-    updateUserById,
-    updateUserStaffById
+    updateUserById
 } = require('../controllers/user');
 //NOTA GLOBAL siempre antes de hacer una funcion usar verifyToken
 
@@ -40,7 +39,6 @@ if(config.desarrollo){
     router.route('/register').post(register);
     router.route('/profile').post(selectUserById);
     router.route('/updateUser').post(updateUserById);
-    router.route('/updateUserStaff').post(uploadProfile.single('image'),updateUserStaffById);
 
     //job
     router.route('/createJob').post(createJob);
