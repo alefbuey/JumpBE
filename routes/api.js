@@ -46,7 +46,7 @@ if(config.desarrollo){
 
     //job
     router.route('/createJob').post(createJob);
-    router.route('/selectJob').post(selectJob);
+    router.route('/selectJob/:idjob/:jobmode').get(selectJob);
     router.route('/updateJob').post(updateJob);
     router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
     router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);

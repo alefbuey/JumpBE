@@ -44,11 +44,13 @@ function createJobStaff(req,res,next){
 
 //Mostrar informacion de trabajo fisico
 function selectJob(req,res,next){
-    body = req.body; //el token entrante tendra informacion acerca del idusuario, idtrabajo
-    if(body.mode == "fisico"){
+    idjob = req.params.idjob
+    jobmode = req.params.jobmode
+    //body = req.body; //el token entrante tendra informacion acerca del idusuario, idtrabajo
+    if(jobmode == "fisico"){
         Job.findOne({
             where:{
-                id: body.id
+                id: idjob
             },         
             include: [{
                 model: JobStaff,
@@ -71,7 +73,7 @@ function selectJob(req,res,next){
     }else{
         Job.findOne({
             where:{
-                id: body.id
+                id: idjob
             }
         }).then(job =>{
             if (!job){
@@ -140,6 +142,7 @@ function selectJobsByTime(req,res,next){
                     function(user,job){return block = {
                         idemployer: user.id,    //Para cargar el perfil del empleado una vez de click
                         idjob: job.id,          //Para cargar la info del trabajo una vez de click
+                        jobmode: job.mode,
                         imageEmployer: user.image,
                         nameEmploye: user.name + " " + user.lastname,
                         title:  job.title,
