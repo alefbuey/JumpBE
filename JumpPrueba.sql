@@ -10,10 +10,7 @@ end;
 $$ language plpgsql;
 
 create trigger insert_Employer_Employee after insert on userjumps
-for each row execute procedure create_Employer_Employee_Staff();
-									
-										     
-										     
+for each row execute procedure create_Employer_Employee_Staff();	     
 										     
 CREATE OR REPLACE function updateNumJobsPosted() RETURNS trigger as
 $$
