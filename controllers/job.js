@@ -26,7 +26,7 @@ module.exports={
 function createJob(req,res,next){
     body = req.body;
     Job.create(body).then(()=>{
-        return res.status(200).send("Successful Creation");
+        return res.status(200).send({status: 'success'});
 
     });
 }
