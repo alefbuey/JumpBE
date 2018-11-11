@@ -17,7 +17,9 @@ module.exports={
     selectJobsByTime: selectJobsByTime,
     createJobStaff: createJobStaff,
     applyingToJob: applyingToJob,
-    changeStateEmployeeJob: changeStateEmployeeJob
+    changeStateEmployeeJob: changeStateEmployeeJob,
+    getApplyingJobs: getApplyingJobs,
+    getAcceptedJobs: getAcceptedJobs
 }
 
 
@@ -113,23 +115,20 @@ function updateJob(req,res){
 //FEED
 //Podria hacerlo en una sentencia sql, tomarlo en cuenta
 function selectJobsByTime(req,res,next){
-    act = req.params.actualizar;
     idUser = req.params.idUser;
     //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
 
-    var sql = 'SELECT us.*, j.* FROM jobs as j INNER JOIN userjumps as us ON (j.idemployer = us.id) and (us.id <> $1) ORDER BY "j"."updatedAt" DESC LIMIT 10';
+    var sql = 'SELECT us.*, us.id as idemployer, j.*,j.id as idjob FROM jobs as j INNER JOIN userjumps as us ON (j.idemployer = us.id) and (us.id <> ?) ORDER BY "j"."updatedAt" DESC LIMIT 10';
     sequelize.query(sql,
-        { bind: [idUser], type: sequelize.QueryTypes.SELECT}).then(usersjobs=>{
+        { replacements: [idUser], type: sequelize.QueryTypes.SELECT}).then(usersjobs=>{
         if(!usersjobs){
             return res.status(404).send ('UsersJobs not found');
         }
         
-        console.log(usersjobs)
-
-
+              //Para cargar la info del trabajo una vez de click
         data = usersjobs.map(uj =>        block = {
-            idemployer: uj.id,    //Para cargar el perfil del empleado una vez de click
-            idjob: uj.id,          //Para cargar la info del trabajo una vez de click
+            idemployer: uj.idemployer,    //Para cargar el perfil del empleado una vez de click
+            idjob: uj.idjob,        //Para cargar la info del trabajo una vez de click
             jobmode: uj.mode,
             imageEmployer: uj.image,
             nameEmploye: uj.name + " " + uj.lastname,
@@ -139,17 +138,16 @@ function selectJobsByTime(req,res,next){
             numbervacancies: uj.numbervacancies
         } )
 
- 
-
-
         if(config.desarrollo){
             return res.status(200).send(data); 
         }else{
-            req.body = json;
+            req.body = data;
             next();
         }
 
-    }) 
+    }).catch(err => {
+        return res.status(500).send ('Server Error with Jobs In Course');
+    }); 
 }
 
 //APLICAR A UN TRABAJO
@@ -190,10 +188,6 @@ function selectJobsByStateEmployer(req,res,next){
         where:{
             idemployer: body.id, state: "1"
         },
-        include: [{
-            model: EmployeeJob ,
-            required: true
-        }],
             order: [ [ 'updatedAt', 'DESC' ]]
     }).then(jobsPosted =>{
         if (!jobsPosted){
@@ -240,6 +234,89 @@ function selectJobsByStateEmployer(req,res,next){
 //EMPLEADO
 // Trabjo aplicado y en curso
 // Cada uno muestra los id de los trabajadores asociado
+//APPLYING
+
+function getApplyingJobs(req,res,next){
+    idUser = req.params.idUser;
+    Job.findAll({
+        limit: 10,
+        include: [{
+            model: EmployeeJob,
+            where:{idemployee: body.id, state: "1"},
+            required: true
+        }],
+        order: [ [ 'updatedAt', 'DESC' ]]
+    }).then(Applyingjobs=>{
+        if (!Applyingjobs){
+            return res.status(404).send (' Applying Jobs not found');
+        }
+
+        data = Applyingjobs.map(uj =>        block = {
+            idemployer: uj.id,    //Para cargar el perfil del empleado una vez de click
+            idjob: uj.id,          //Para cargar la info del trabajo una vez de click
+            jobmode: uj.mode,
+            // imageEmployer: uj.image,
+            // nameEmploye: uj.name + " " + uj.lastname,
+            title:  uj.title,
+            jobcost:    uj.jobcost,
+            dateposted: uj.dateposted,
+            numbervacancies: uj.numbervacancies
+        } )
+
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = data;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ('Server Error with Applying Jobs');
+    });
+
+}
+
+//WORKING
+function getAcceptedJobs(req,res,next){
+    idUser = req.params.idUser;
+    Job.findAll({
+        limit: 10,
+        include: [{
+            model: EmployeeJob,
+            where:{idemployee: idUser, state: "2"},
+            required: true
+        }],
+        order: [ [ 'updatedAt', 'DESC' ]]
+    }).then(WorkingJobs=>{
+        if (!WorkingJobs){
+            return res.status(404).send (' Working Jobs not found');
+        }
+
+        data = WorkingJobs.map(uj =>        block = {
+            idemployer: uj.id,    //Para cargar el perfil del empleado una vez de click
+            idjob: uj.id,          //Para cargar la info del trabajo una vez de click
+            jobmode: uj.mode,
+            // imageEmployer: uj.image,
+            // nameEmploye: uj.name + " " + uj.lastname,
+            title:  uj.title,
+            jobcost:    uj.jobcost,
+            dateend: uj.dateend,
+        } )
+
+        console.log(data);
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = data;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ('Server Error with Working Jobs');
+    });
+}
+
+
 function selectJobsByStateEmployee(req,res,next){
     body = req.body;
 

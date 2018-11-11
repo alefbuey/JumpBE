@@ -24,7 +24,9 @@ const {
     selectJobsByTime,
     createJobStaff,
     applyingToJob,
-    changeStateEmployeeJob
+    changeStateEmployeeJob,
+    getApplyingJobs,
+    getAcceptedJobs
 } = require('../controllers/job');
 
 const {
@@ -54,6 +56,9 @@ if(config.desarrollo){
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
     router.route('/changeStateEmployeeJob').post(changeStateEmployeeJob);
+    router.route('/getAcceptedJobs/:idUser').get(getAcceptedJobs);
+    router.route('/getApplyingJobs/:idUser').get(getApplyingJobs);
+
 
     //Comment
     router.route('/createComment').post(createComment);
