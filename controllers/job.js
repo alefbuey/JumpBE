@@ -116,56 +116,40 @@ function selectJobsByTime(req,res,next){
     act = req.params.actualizar;
     idUser = req.params.idUser;
     //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
-    if(act == 'true'){
-        Job.findAll({
-            limit: 10,
-            where : {
-                idemployer: {[Op.ne]: idUser},
-            },
-            order: [ [ 'updatedAt', 'DESC' ]]
-        }).then(jobs =>{
-            if (!jobs){
-                return res.status(404).send ('Jobs not found');
-            };
 
-            var sql = 'SELECT us.* FROM jobs as j INNER JOIN userjumps as us ON (j.idemployer = us.id) and (us.id <> $1)';
-            sequelize.query(sql,
-                { bind: [idUser], type: sequelize.QueryTypes.SELECT},
-                {model: User}).then(users=>{
-                if(!users){
-                    return res.status(404).send ('Users not found');
-                }
-                console.log(jobs[0].title);
-                console.log(users);
-
-                var data = zipwith(
-                    function(user,job){return block = {
-                        idemployer: user.id,    //Para cargar el perfil del empleado una vez de click
-                        idjob: job.id,          //Para cargar la info del trabajo una vez de click
-                        jobmode: job.mode,
-                        imageEmployer: user.image,
-                        nameEmploye: user.name + " " + user.lastname,
-                        title:  job.title,
-                        jobcost:    job.jobcost,
-                        dateposted: job.dateposted,
-                        numbervacancies: job.numbervacancies
-                    }
-                },users,jobs);
+    var sql = 'SELECT us.*, j.* FROM jobs as j INNER JOIN userjumps as us ON (j.idemployer = us.id) and (us.id <> $1) ORDER BY "j"."updatedAt" DESC LIMIT 10';
+    sequelize.query(sql,
+        { bind: [idUser], type: sequelize.QueryTypes.SELECT}).then(usersjobs=>{
+        if(!usersjobs){
+            return res.status(404).send ('UsersJobs not found');
+        }
+        
+        console.log(usersjobs)
 
 
-                if(config.desarrollo){
-                    return res.status(200).send(data); 
-                }else{
-                    req.body = json;
-                    next();
-                }
+        data = usersjobs.map(uj =>        block = {
+            idemployer: uj.id,    //Para cargar el perfil del empleado una vez de click
+            idjob: uj.id,          //Para cargar la info del trabajo una vez de click
+            jobmode: uj.mode,
+            imageEmployer: uj.image,
+            nameEmploye: uj.name + " " + uj.lastname,
+            title:  uj.title,
+            jobcost:    uj.jobcost,
+            dateposted: uj.dateposted,
+            numbervacancies: uj.numbervacancies
+        } )
 
-            })
+ 
 
-        }).catch(err => {
-        return res.status(500).send (err);
-    });
-    }
+
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = json;
+            next();
+        }
+
+    }) 
 }
 
 //APLICAR A UN TRABAJO

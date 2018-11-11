@@ -41,7 +41,7 @@ if(config.desarrollo){
     //user
     router.route('/login').post(login);
     router.route('/register').post(register);
-    router.route('/profile').post(selectUserById);
+    router.route('/profile/:idUser').get(selectUserById);
     router.route('/updateUser').post(uploadProfile.single('image'),updateUserById);
 
     //job

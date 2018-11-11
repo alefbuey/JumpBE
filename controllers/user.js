@@ -10,11 +10,10 @@ module.exports={
 //Seleccionar un usuario por id
 //Para los PERFILES DE UN USUARIO Y PARA EL PROPIO PERFIL
 function selectUserById(req,res,next){
-    body = req.body;
 
     User.findOne({
         where:{
-            id: body.idUser
+            id: req.params.idUser
         }
     }).then(user=>{
         if (!user){
