@@ -41,7 +41,7 @@ if(config.desarrollo){
     //user
     router.route('/login').post(login);
     router.route('/register').post(register);
-    router.route('/profile').post(selectUserById);
+    router.route('/profile/:idUser').get(selectUserById);
     router.route('/updateUser').post(uploadProfile.single('image'),updateUserById);
 
     //job
@@ -50,7 +50,7 @@ if(config.desarrollo){
     router.route('/updateJob').post(updateJob);
     router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
     router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);
-    router.route('/feed/:actualizar/:idUser').get(selectJobsByTime);
+    router.route('/feed/:idUser').get(selectJobsByTime);
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
     router.route('/changeStateEmployeeJob').post(changeStateEmployeeJob);
