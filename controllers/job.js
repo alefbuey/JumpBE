@@ -242,7 +242,7 @@ function getApplyingJobs(req,res,next){
         limit: 10,
         include: [{
             model: EmployeeJob,
-            where:{idemployee: body.id, state: "1"},
+            where:{idemployee: idUser, state: "1"},
             required: true
         }],
         order: [ [ 'updatedAt', 'DESC' ]]
