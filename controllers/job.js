@@ -156,7 +156,7 @@ function applyingToJob(req,res,next){
     body = req.body;
 
     EmployeeJob.create(body).then(()=>{
-        return res.status(200).send("Successful Applying");
+        return res.status(200).send({status: 'success'});
     })
 
 } 
