@@ -130,6 +130,7 @@ function selectJobsByTime(req,res,next){
             idemployer: uj.idemployer,    //Para cargar el perfil del empleado una vez de click
             idjob: uj.idjob,        //Para cargar la info del trabajo una vez de click
             jobmode: uj.mode,
+            imageJob: uj.principalImage,
             imageEmployer: uj.image,
             nameEmploye: uj.name + " " + uj.lastname,
             title:  uj.title,

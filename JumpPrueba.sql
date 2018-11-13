@@ -101,9 +101,9 @@ insert into jobmodes values
 (default, 'Virtual', current_timestamp,current_timestamp);
 
 insert into jobs values
-(default, 1, 2,1,1,'Web Page Development','No description yet', 10000,5000, '2018-04-24','2018-04-30','2018-09-30','2018-04-29',1, "uploads/jobs/job1.jpg"	, current_timestamp,current_timestamp),
-(default, 2, 2,1,2,'Database design','No description yet', 100,50, '2018-03-24','2018-05-30','2018-06-30','2018-05-15',3, "uploads/jobs/job2.jpg", current_timestamp,current_timestamp),
-(default, 3, 2,1,3,'Walking my dog','Just walk my dog!', 10,10, '2018-04-24','2018-04-26','2018-04-26','2018-04-25',1, "uploads/jobs/job3.jpg",  current_timestamp,current_timestamp);
+(default, 1, 2,1,1,'Web Page Development','No description yet', 10000,5000, '2018-04-24','2018-04-30','2018-09-30','2018-04-29',1, 'uploads/jobs/job1.jpg'	, current_timestamp,current_timestamp),
+(default, 2, 2,1,2,'Database design','No description yet', 100,50, '2018-03-24','2018-05-30','2018-06-30','2018-05-15',3, 'uploads/jobs/job1.jpg', current_timestamp,current_timestamp),
+(default, 3, 2,1,3,'Walking my dog','Just walk my dog!', 10,10, '2018-04-24','2018-04-26','2018-04-26','2018-04-25',1, 'uploads/jobs/job1.jpg',  current_timestamp,current_timestamp);
 
 insert into employeestates values 
 (default, 'Applying', current_timestamp,current_timestamp),
