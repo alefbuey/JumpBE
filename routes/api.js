@@ -22,7 +22,6 @@ const {
     selectJobsByTime,
     createJobStaff,
     applyingToJob,
-    changeStateEmployeeJob,
     getApplyingJobs,
     getAcceptedJobs,
     getPostedBusiness,
@@ -58,7 +57,6 @@ if(config.desarrollo){
     router.route('/feed/:idUser').get(selectJobsByTime);
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
-    router.route('/changeStateEmployeeJob').post(changeStateEmployeeJob);
     router.route('/getAcceptedJobs/:idUser').get(getAcceptedJobs,addUsersToJobs);
     router.route('/getApplyingJobs/:idUser').get(getApplyingJobs,addUsersToJobs);
     router.route('/getPostedBusiness/:idUser').get(getPostedBusiness);

@@ -15,7 +15,6 @@ module.exports={
     selectJobsByTime: selectJobsByTime,
     createJobStaff: createJobStaff,
     applyingToJob: applyingToJob,
-    changeStateEmployeeJob: changeStateEmployeeJob,
     getApplyingJobs: getApplyingJobs,
     getAcceptedJobs: getAcceptedJobs,
     getAcceptedBusiness: getAcceptedBusiness,
@@ -150,6 +149,17 @@ function updateJob(req,res){
 
 }
 
+//APLICAR A UN TRABAJO
+
+function applyingToJob(req,res,next){
+    body = req.body;
+
+    EmployeeJob.create(body).then(()=>{
+        return res.status(200).send({status: 'success'});
+    })
+
+} 
+
 //FEED
 //Podria hacerlo en una sentencia sql, tomarlo en cuenta
 function selectJobsByTime(req,res,next){
@@ -187,32 +197,6 @@ function selectJobsByTime(req,res,next){
     }).catch(err => {
         return res.status(500).send ('Server Error with Jobs In Course');
     }); 
-}
-
-//APLICAR A UN TRABAJO
-
-function applyingToJob(req,res,next){
-    body = req.body;
-
-    EmployeeJob.create(body).then(()=>{
-        return res.status(200).send({status: 'success'});
-    })
-
-} 
-
-//ACEPTADO EN EL TRABAJO Y TERMINANDO TRABAJO
-
-function changeStateEmployeeJob(req,res,next){
-    body = req.body;
-    EmployeeJob.update(
-        body,
-        {where: 
-            {idemployee: body.idemployee, 
-                idjob: body.idjob}
-            }).then(()=>{
-                return res.status(200).send("Succesfull Chage State of EmployeeJob")
-            })
-
 }
 
 //EMPLEADOR O JEFE
