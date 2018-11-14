@@ -5,6 +5,30 @@ var fs = require('fs');
 module.exports={
     selectUserById: selectUserById,
     updateUserById: updateUserById,
+    getImageById: getImageById
+}
+
+//OBTENER LA IMAGEN POR ID
+
+function getImageById(req,res,next){
+    User.findOne({
+        where:{
+            id: req.params.idUser
+        }
+    }).then(user=>{
+        if (!user){
+            return res.status(404).send (' Image not found');
+        }
+        if(config.desarrollo){
+            return res.status(200).send({image: user.image}); 
+        }else{
+            req.body = user;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ('Server Error in getImageById');
+    });
 }
 
 //Seleccionar un usuario por id

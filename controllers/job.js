@@ -19,7 +19,9 @@ module.exports={
     applyingToJob: applyingToJob,
     changeStateEmployeeJob: changeStateEmployeeJob,
     getApplyingJobs: getApplyingJobs,
-    getAcceptedJobs: getAcceptedJobs
+    getAcceptedJobs: getAcceptedJobs,
+    getAcceptedBusiness: getAcceptedBusiness,
+    getPostedBusiness: getPostedBusiness
 }
 
 
@@ -180,6 +182,83 @@ function changeStateEmployeeJob(req,res,next){
 //EMPLEADOR O JEFE
 // Trabajos en espera y en curso de acuerdo al estado
 // Cada uno muestra los id de los trabajadores asociado
+
+//POSTED JEFE 
+function getPostedBusiness(req,res,next){
+    idUser = req.params.idUser;
+    Job.findAll({
+        limit: 10,
+        where:{
+            idemployer: idUser, state: "1"
+        },
+            order: [ [ 'updatedAt', 'DESC' ]]
+    }).then(jobsPosted =>{
+        if (!jobsPosted){
+            return res.status(404).send ('Posted Jobs not found');
+        }
+
+        data = jobsPosted.map(uj =>        block = {
+            idjob: uj.id,          //Para cargar la info del trabajo una vez de click
+            jobmode: uj.mode,
+            title:  uj.title,
+            jobcost:    uj.jobcost,
+            dateposted: uj.dateposted,
+            dateend: uj.dateend,
+        } )
+
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = data;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ('Server Error with Jobs In Course');
+    });
+}
+
+//WORKING JEFE
+
+function getAcceptedBusiness(req,res,next){
+    idUser = req.params.idUser;
+    Job.findAll({
+        limit: 10,
+        where:{
+            idemployer: idUser, state: "3"
+        },
+        include: [{
+            model: EmployeeJob ,
+            required: true
+        }],
+        order: [ [ 'updatedAt', 'DESC' ]]
+    }).then(jobsInCourse =>{
+        if (!jobsInCourse){
+            return res.status(404).send ('Jobs In Course not found');
+        }
+
+        data = jobsInCourse.map(uj =>        block = {
+            idjob: uj.id,          //Para cargar la info del trabajo una vez de click
+            jobmode: uj.mode,
+            title:  uj.title,
+            jobcost:    uj.jobcost,
+            dateposted: uj.dateposted,
+            dateend: uj.dateend,
+        } )
+
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = data;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ('Server Error with Jobs In Course');
+    });
+}
+
+
 function selectJobsByStateEmployer(req,res,next){
     body = req.body;
     
@@ -253,11 +332,9 @@ function getApplyingJobs(req,res,next){
         }
 
         data = Applyingjobs.map(uj =>        block = {
-            idemployer: uj.id,    //Para cargar el perfil del empleado una vez de click
+            idemployer: uj.idemployer,    //Para cargar el perfil del empleado una vez de click
             idjob: uj.id,          //Para cargar la info del trabajo una vez de click
             jobmode: uj.mode,
-            // imageEmployer: uj.image,
-            // nameEmploye: uj.name + " " + uj.lastname,
             title:  uj.title,
             jobcost:    uj.jobcost,
             dateposted: uj.dateposted,
@@ -294,11 +371,9 @@ function getAcceptedJobs(req,res,next){
         }
 
         data = WorkingJobs.map(uj =>        block = {
-            idemployer: uj.id,    //Para cargar el perfil del empleado una vez de click
+            idemployer: uj.idemployer,    //Para cargar el perfil del empleado una vez de click
             idjob: uj.id,          //Para cargar la info del trabajo una vez de click
             jobmode: uj.mode,
-            // imageEmployer: uj.image,
-            // nameEmploye: uj.name + " " + uj.lastname,
             title:  uj.title,
             jobcost:    uj.jobcost,
             dateend: uj.dateend,
