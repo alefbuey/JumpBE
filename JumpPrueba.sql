@@ -90,7 +90,6 @@ update Employers set ranking = 4.5, spentamount = 10000.00, jobsposted = 8 where
 
 insert into jobstates values 
 (default, 'Posted', current_timestamp,current_timestamp),
-(default, 'PostedInCourse', current_timestamp,current_timestamp),
 (default, 'InCourse', current_timestamp,current_timestamp),
 (default, 'FinishedNoPay', current_timestamp,current_timestamp),
 (default, 'Paid', current_timestamp,current_timestamp);

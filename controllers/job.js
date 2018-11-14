@@ -12,8 +12,6 @@ module.exports={
     createJob: createJob,
     deleteJob: deleteJob,
     updateJob: updateJob,
-    selectJobsByStateEmployer: selectJobsByStateEmployer,
-    selectJobsByStateEmployee: selectJobsByStateEmployee,
     selectJobsByTime: selectJobsByTime,
     createJobStaff: createJobStaff,
     applyingToJob: applyingToJob,
@@ -22,10 +20,45 @@ module.exports={
     getAcceptedJobs: getAcceptedJobs,
     getAcceptedBusiness: getAcceptedBusiness,
     getPostedBusiness: getPostedBusiness,
-    getJobApplicants: getJobApplicants
+    getJobApplicants: getJobApplicants,
+    acceptJob: acceptJob,
+    deleteApplicant: deleteApplicant
 }
 
 
+//Aceptar Trabajo
+//Cambiar estado en employeeJob del aplicante aceptado
+//Cambiar el modo a working del trabajo apenas se acepte uno
+//debo recibir idemployee, idjob, state 
+//state para usar en aceptado 
+//NOTA MENTAL: cuando hay aplicantes y no son aceptados se quedan aplicando jaja corregir eso
+function acceptJob(req,res,next){
+    body = req.body;
+    idemployee = body.idemployee
+    idjob = body.idjob
+
+    Job.update({state: 2},{where : {id : idjob}}).then(()=>{
+        EmployeeJob.update({state: 2},{where :{idemployee : idemployee, idjob: idjob}}).then(()=>{
+            return res.status(200).send({status: 'success'});
+        }).catch(err => {
+            return res.status(500).send ('Server Error in accepted Job');
+        });
+    }).catch(err => {
+        return res.status(500).send ('Server Error in accepted Job');
+    });
+}
+
+function deleteApplicant(req,res,next){
+    body = req.body
+    idemployee = body.idemployee
+    idjob = body.idjob
+
+    EmployeeJob.destroy({where: {idemployee : idemployee, idjob : idjob}}).then(()=>{
+        return res.status(200).send({status: 'success'});
+    }).catch(err => {
+        return res.status(500).send ('Server Error in deleteApplicant');
+    });
+}
 
 //Crear un trabajo
 function createJob(req,res,next){
@@ -33,6 +66,8 @@ function createJob(req,res,next){
     Job.create(body).then(()=>{
         return res.status(200).send({status: 'success'});
 
+    }).catch(err => {
+        return res.status(500).send ('Server Error in createJob');
     });
 }
 
@@ -226,7 +261,7 @@ function getAcceptedBusiness(req,res,next){
     Job.findAll({
         limit: 10,
         where:{
-            idemployer: idUser, state: "3"
+            idemployer: idUser, state: "2"
         },
         include: [{
             model: EmployeeJob ,
@@ -256,59 +291,6 @@ function getAcceptedBusiness(req,res,next){
 
     }).catch(err => {
         return res.status(500).send ('Server Error with Jobs In Course');
-    });
-}
-
-
-function selectJobsByStateEmployer(req,res,next){
-    body = req.body;
-    
-    //Query de los trabajos posteados
-    Job.findAll({
-        limit: 10,
-        where:{
-            idemployer: body.id, state: "1"
-        },
-            order: [ [ 'updatedAt', 'DESC' ]]
-    }).then(jobsPosted =>{
-        if (!jobsPosted){
-            return res.status(404).send ('Posted Jobs not found');
-        }
-
-        //Query de los trabajos en curso
-        Job.findAll({
-            limit: 10,
-            where:{
-                idemployer: body.id, state: "3"
-            },
-            include: [{
-                model: EmployeeJob ,
-                required: true
-            }],
-            order: [ [ 'updatedAt', 'DESC' ]]
-        }).then(jobsInCourse =>{
-            if (!jobsInCourse){
-                return res.status(404).send ('Jobs In Course not found');
-            }
-
-            var data = { 
-                jobsPosted : jobsPosted,
-                jobsInCourse : jobsInCourse
-            }
-
-            if(config.desarrollo){
-                return res.status(200).send(data); 
-            }else{
-                req.body = data;
-                next();
-            }
-
-        }).catch(err => {
-            return res.status(500).send ('Server Error with Jobs In Course');
-        });
-
-    }).catch(err => {
-        return res.status(500).send ('Server Error with Poste Jobs');
     });
 }
 
@@ -394,60 +376,6 @@ function getAcceptedJobs(req,res,next){
 }
 
 
-function selectJobsByStateEmployee(req,res,next){
-    body = req.body;
-
-    //Query de los trabajos en estado applying
-    Job.findAll({
-        limit: 10,
-        include: [{
-            model: EmployeeJob,
-            where:{idemployee: body.id, state: "1"},
-            required: true
-        }],
-        order: [ [ 'updatedAt', 'DESC' ]]
-    }).then(Applyingjobs=>{
-        if (!Applyingjobs){
-            return res.status(404).send (' Applying Jobs not found');
-        }
-
-        //Query anidada de los trabajos en estado working
-        Job.findAll({
-            limit: 10,
-            include: [{
-                model: EmployeeJob,
-                where:{idemployee: body.id, state: "2"},
-                required: true
-            }],
-            order: [ [ 'updatedAt', 'DESC' ]]
-        }).then(WorkingJobs=>{
-            if (!WorkingJobs){
-                return res.status(404).send (' Working Jobs not found');
-            }
-    
-            var data = {
-                Applyingjobs: Applyingjobs,
-                WorkingJobs: WorkingJobs
-            }
-
-            if(config.desarrollo){
-                return res.status(200).send(data); 
-            }else{
-                req.body = data;
-                next();
-            }
-
-        }).catch(err => {
-            return res.status(500).send ('Server Error with Working Jobs');
-        });
-
-    }).catch(err => {
-        return res.status(500).send ('Server Error with Applying Jobs');
-    });
-
-   
-}
-
 function getJobApplicants(req,res,next){
     idJob = req.params.idJob;
  
@@ -483,4 +411,3 @@ function getJobApplicants(req,res,next){
     });
     
 }
-

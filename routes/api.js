@@ -19,8 +19,6 @@ const {
     selectJob,
     deleteJob,
     updateJob,
-    selectJobsByStateEmployer,
-    selectJobsByStateEmployee,
     selectJobsByTime,
     createJobStaff,
     applyingToJob,
@@ -29,7 +27,9 @@ const {
     getAcceptedJobs,
     getPostedBusiness,
     getAcceptedBusiness,
-    getJobApplicants
+    getJobApplicants,
+    acceptJob,
+    deleteApplicant
 } = require('../controllers/job');
 
 const {
@@ -55,8 +55,6 @@ if(config.desarrollo){
     router.route('/createJob').post(createJob);
     router.route('/selectJob/:idjob/:jobmode').get(selectJob);
     router.route('/updateJob').post(updateJob);
-    router.route('/employer/selectJobsByState').post(selectJobsByStateEmployer);
-    router.route('/employee/selectJobsByStateEmployee').post(selectJobsByStateEmployee);
     router.route('/feed/:idUser').get(selectJobsByTime);
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
@@ -66,6 +64,8 @@ if(config.desarrollo){
     router.route('/getPostedBusiness/:idUser').get(getPostedBusiness);
     router.route('/getAcceptedBusiness/:idUser').get(getAcceptedBusiness);
     router.route('/applicants/:idJob').get(getJobApplicants);
+    router.route('/acceptJob').post(acceptJob);
+    router.route('/deleteApplicant').post(deleteApplicant);
 
     //Comment
     router.route('/createComment').post(createComment);
