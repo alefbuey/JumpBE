@@ -134,7 +134,7 @@ function selectJobsByTime(req,res,next){
             jobmode: uj.mode,
             imageJob: uj.principalImage,
             imageEmployer: uj.image,
-            nameEmploye: uj.name + " " + uj.lastname,
+            nameEmployer: uj.name + " " + uj.lastname,
             title:  uj.title,
             jobcost:    uj.jobcost,
             dateposted: uj.dateposted,
@@ -336,17 +336,15 @@ function getApplyingJobs(req,res,next){
             idjob: uj.id,          //Para cargar la info del trabajo una vez de click
             jobmode: uj.mode,
             title:  uj.title,
+            imageJob: uj.principalImage,
             jobcost:    uj.jobcost,
             dateposted: uj.dateposted,
+            dateend: uj.dateend,
             numbervacancies: uj.numbervacancies
         } )
 
-        if(config.desarrollo){
-            return res.status(200).send(data); 
-        }else{
             req.body = data;
             next();
-        }
 
     }).catch(err => {
         return res.status(500).send ('Server Error with Applying Jobs');
@@ -375,11 +373,13 @@ function getAcceptedJobs(req,res,next){
             idjob: uj.id,          //Para cargar la info del trabajo una vez de click
             jobmode: uj.mode,
             title:  uj.title,
+            imageJob: uj.principalImage,
             jobcost:    uj.jobcost,
+            dateposted: uj.dateposted,
             dateend: uj.dateend,
+            numbervacancies: uj.numbervacancies
         } )
 
-        console.log(data);
         if(config.desarrollo){
             return res.status(200).send(data); 
         }else{

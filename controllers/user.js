@@ -1,28 +1,49 @@
 const {User} = require('../models/userModel');
 const config =  require('../config/config');
 var fs = require('fs');
+const {zipwith} = require("zipwith");
+const {Op} = require('sequelize');
 
 module.exports={
     selectUserById: selectUserById,
     updateUserById: updateUserById,
-    getImageById: getImageById
+    addUsersToJobs: addUsersToJobs
 }
 
 //OBTENER LA IMAGEN POR ID
 
-function getImageById(req,res,next){
-    User.findOne({
-        where:{
-            id: req.params.idUser
+function addUsersToJobs(req,res,next){
+    jobs = req.body //array de jobs
+    idsEmployers = jobs.map(job => job.idemployer);
+    console.log(idsEmployers);
+
+    User.findAll({
+        where: {
+          id: {
+            [Op.or]: idsEmployers
+          }
         }
-    }).then(user=>{
-        if (!user){
+    }).then(users=>{
+        if (!users){
             return res.status(404).send (' Image not found');
         }
+        data = zipwith((us,jbs)=> block ={
+            nameEmployer: us.name + " " + us.lastname,
+            imageEmployer : us.image,
+            idemployer: jbs.idemployer,    //Para cargar el perfil del empleado una vez de click
+            idjob: jbs.idjob,        //Para cargar la info del trabajo una vez de click
+            jobmode: jbs.jobmode,
+            imageJob: jbs.imageJob,
+            title:  jbs.title,
+            jobcost:    jbs.jobcost,
+            dateposted: jbs.dateposted,
+            dateend: jbs.dateend,
+            numbervacancies: jbs.numbervacancies
+        },users,jobs)
         if(config.desarrollo){
-            return res.status(200).send({image: user.image}); 
+            return res.status(200).send(data); 
         }else{
-            req.body = user;
+            req.body = data;
             next();
         }
 

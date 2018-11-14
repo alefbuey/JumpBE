@@ -34,7 +34,7 @@ const {
 const {
     selectUserById,
     updateUserById,
-    getImageById
+    addUsersToJobs
 } = require('../controllers/user');
 
 const {
@@ -48,7 +48,7 @@ if(config.desarrollo){
     router.route('/register').post(register);
     router.route('/profile/:idUser').get(selectUserById);
     router.route('/updateUser').post(uploadProfile.single('image'),updateUserById);
-    router.route('/getImageById/:idUser').get(getImageById);
+    //router.route('/getImageById/:idUser').get(getImageById);
 
     //job
     router.route('/createJob').post(createJob);
@@ -60,8 +60,8 @@ if(config.desarrollo){
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
     router.route('/changeStateEmployeeJob').post(changeStateEmployeeJob);
-    router.route('/getAcceptedJobs/:idUser').get(getAcceptedJobs);
-    router.route('/getApplyingJobs/:idUser').get(getApplyingJobs);
+    router.route('/getAcceptedJobs/:idUser').get(getAcceptedJobs,addUsersToJobs);
+    router.route('/getApplyingJobs/:idUser').get(getApplyingJobs,addUsersToJobs);
     router.route('/getPostedBusiness/:idUser').get(getPostedBusiness);
     router.route('/getAcceptedBusiness/:idUser').get(getAcceptedBusiness);
 
