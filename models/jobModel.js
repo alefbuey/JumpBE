@@ -18,7 +18,7 @@ const Job = sequelize.define('job',{
     dateend         :	Sequelize.DATE,	
     datepostend     :   Sequelize.DATE,	
     numbervacancies :	Sequelize.INTEGER,
-    principalImage  : {type: Sequelize.STRING, defaultValue: "uploads/jobs/default.png"},
+    principalImage  : {type: Sequelize.STRING, defaultValue: "uploads/jobs/default.png"}
 });
 
 const JobState = sequelize.define('jobstate',{
