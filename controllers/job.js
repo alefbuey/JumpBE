@@ -20,6 +20,7 @@ module.exports={
     getAcceptedJobs: getAcceptedJobs,
     getAcceptedBusiness: getAcceptedBusiness,
     getPostedBusiness: getPostedBusiness,
+    getJobApplicants: getJobApplicants,
     acceptJob: acceptJob,
     deleteApplicant: deleteApplicant
 }
@@ -372,4 +373,41 @@ function getAcceptedJobs(req,res,next){
     }).catch(err => {
         return res.status(500).send ('Server Error with Working Jobs');
     });
+}
+
+
+function getJobApplicants(req,res,next){
+    idJob = req.params.idJob;
+ 
+    var sql = 'SELECT * FROM userjumps INNER JOIN (SELECT * from employeejobs where idjob = ? and state=1) ej ON (id = ej.idemployee) ORDER BY "ej"."updatedAt" DESC LIMIT 10'
+    sequelize.query(sql,
+        { replacements: [idJob], type: sequelize.QueryTypes.SELECT}).then(applicants =>{
+        if (!applicants){
+            return res.status(404).send ('Applicants not found');
+        }
+
+        data = applicants.map(uj =>        block = {
+            
+            id: uj.id,
+            name: uj.name + " " + uj.lastname,
+            image: uj.image,
+            idjob: uj.idjob,         
+            rank: uj.rank,
+            salary: uj.salary,
+            counteroffer:  uj.counteroffer,
+            postedreason:    uj.postedreason,
+            counterofferreason:  uj.counterofferreason
+        } )
+
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = data;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ({err, mesg:'Server Error with List of Applicants'});
+    });
+    
 }
