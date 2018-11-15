@@ -31,7 +31,25 @@ zipWith = function() {
 	return ls_
 }
 
+function concat(job,user) {
+    block ={
+        nameEmployer: user.name + " " + user.lastname,
+        imageEmployer : user.image,
+        idemployer: job.idemployer,    //Para cargar el perfil del empleado una vez de click
+        idjob: job.idjob,        //Para cargar la info del trabajo una vez de click
+        jobmode: job.jobmode,
+        imageJob: job.imageJob,
+        title:  job.title,
+        jobcost:    job.jobcost,
+        dateposted: job.dateposted,
+        dateend: job.dateend,
+        numbervacancies: job.numbervacancies
+    }
+    return block
+}
+
 module.exports = {
     zip: zip,
-    zipWith: zipWith
+    zipWith: zipWith,
+    concat: concat
 }

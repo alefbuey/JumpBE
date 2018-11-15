@@ -3,6 +3,7 @@ const config =  require('../config/config');
 var fs = require('fs');
 const {zipwith} = require("zipwith");
 const {Op} = require('sequelize');
+const {concat} = require('../extra/functional')
 
 module.exports={
     selectUserById: selectUserById,
@@ -27,19 +28,13 @@ function addUsersToJobs(req,res,next){
         if (!users){
             return res.status(404).send (' Image not found');
         }
-        data = zipwith((us,jbs)=> block ={
-            nameEmployer: us.name + " " + us.lastname,
-            imageEmployer : us.image,
-            idemployer: jbs.idemployer,    //Para cargar el perfil del empleado una vez de click
-            idjob: jbs.idjob,        //Para cargar la info del trabajo una vez de click
-            jobmode: jbs.jobmode,
-            imageJob: jbs.imageJob,
-            title:  jbs.title,
-            jobcost:    jbs.jobcost,
-            dateposted: jbs.dateposted,
-            dateend: jbs.dateend,
-            numbervacancies: jbs.numbervacancies
-        },users,jobs)
+
+        data = jobs.map(job=>concat(job,users.find(us =>{
+            if(us.id == job.idemployer){
+                return us
+            }
+        })))
+
         if(config.desarrollo){
             return res.status(200).send(data); 
         }else{
