@@ -1,4 +1,4 @@
-const {Job,EmployeeJob,JobStaff} = require('../models/jobModel');
+const {Job,EmployeeJob,JobStaff, FavoriteJob} = require('../models/jobModel');
 const {User,Employer} = require('../models/userModel');
 const config =  require('../config/config');
 const jwt = require('jsonwebtoken');
@@ -20,8 +20,9 @@ module.exports={
     getAcceptedBusiness: getAcceptedBusiness,
     getPostedBusiness: getPostedBusiness,
     getJobApplicants: getJobApplicants,
-    acceptJob: acceptJob,
-    deleteApplicant: deleteApplicant
+    acceptApplicant: acceptApplicant,
+    deleteApplicant: deleteApplicant,
+    addToFavorites: addToFavorites
 }
 
 
@@ -31,7 +32,7 @@ module.exports={
 //debo recibir idemployee, idjob, state 
 //state para usar en aceptado 
 //NOTA MENTAL: cuando hay aplicantes y no son aceptados se quedan aplicando jaja corregir eso
-function acceptJob(req,res,next){
+function acceptApplicant(req,res,next){
     body = req.body;
     idemployee = body.idemployee
     idjob = body.idjob
@@ -156,9 +157,20 @@ function applyingToJob(req,res,next){
 
     EmployeeJob.create(body).then(()=>{
         return res.status(200).send({status: 'success'});
-    })
+    }).catch(err => {
+        return res.status(500).send ('Server Error Apply Job');
+    });
 
 } 
+
+function addToFavorites(req,res,next){
+    body = req.body;
+    FavoriteJob.create(body).then(() => {
+        return res.status(200).send({status: 'success'});
+    }).catch(err => {
+        return res.status(500).send ('Server Error Add Favorite Job');
+    });
+}
 
 //FEED
 //Podria hacerlo en una sentencia sql, tomarlo en cuenta
