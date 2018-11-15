@@ -1,4 +1,4 @@
-const {Job,EmployeeJob,JobStaff} = require('../models/jobModel');
+const {Job,EmployeeJob,JobStaff, FavoriteJob} = require('../models/jobModel');
 const {User,Employer} = require('../models/userModel');
 const config =  require('../config/config');
 const jwt = require('jsonwebtoken');
@@ -21,7 +21,8 @@ module.exports={
     getPostedBusiness: getPostedBusiness,
     getJobApplicants: getJobApplicants,
     acceptApplicant: acceptApplicant,
-    deleteApplicant: deleteApplicant
+    deleteApplicant: deleteApplicant,
+    addToFavorites: addToFavorites
 }
 
 
@@ -156,9 +157,20 @@ function applyingToJob(req,res,next){
 
     EmployeeJob.create(body).then(()=>{
         return res.status(200).send({status: 'success'});
-    })
+    }).catch(err => {
+        return res.status(500).send ('Server Error Apply Job');
+    });
 
 } 
+
+function addToFavorites(req,res,next){
+    body = req.body;
+    FavoriteJob.create(body).then(() => {
+        return res.status(200).send({status: 'success'});
+    }).catch(err => {
+        return res.status(500).send ('Server Error Add Favorite Job');
+    });
+}
 
 //FEED
 //Podria hacerlo en una sentencia sql, tomarlo en cuenta
