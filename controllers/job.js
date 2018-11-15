@@ -20,7 +20,7 @@ module.exports={
     getAcceptedBusiness: getAcceptedBusiness,
     getPostedBusiness: getPostedBusiness,
     getJobApplicants: getJobApplicants,
-    acceptJob: acceptJob,
+    acceptApplicant: acceptApplicant,
     deleteApplicant: deleteApplicant
 }
 
@@ -31,7 +31,7 @@ module.exports={
 //debo recibir idemployee, idjob, state 
 //state para usar en aceptado 
 //NOTA MENTAL: cuando hay aplicantes y no son aceptados se quedan aplicando jaja corregir eso
-function acceptJob(req,res,next){
+function acceptApplicant(req,res,next){
     body = req.body;
     idemployee = body.idemployee
     idjob = body.idjob
@@ -372,7 +372,7 @@ function getJobApplicants(req,res,next){
 
         data = applicants.map(uj =>        block = {
             
-            id: uj.id,
+            idemployee: uj.id,
             name: uj.name + " " + uj.lastname,
             image: uj.image,
             idjob: uj.idjob,         
