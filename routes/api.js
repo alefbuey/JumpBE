@@ -29,7 +29,8 @@ const {
     getJobApplicants,
     getJobTeamMembers,
     acceptApplicant,
-    deleteApplicant
+    deleteApplicant,
+    addToFavorites
 } = require('../controllers/job');
 
 const {
@@ -65,6 +66,7 @@ if(config.desarrollo){
     router.route('/membersTeam/:idJob').get(getJobTeamMembers);
     router.route('/acceptApplicant').post(acceptApplicant);
     router.route('/deleteApplicant').post(deleteApplicant);
+    router.route('/addToFavorites').post(addToFavorites);
 
 
     //Comment
