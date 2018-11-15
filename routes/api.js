@@ -30,7 +30,8 @@ const {
     getJobTeamMembers,
     acceptApplicant,
     deleteApplicant,
-    addToFavorites
+    addToFavorites,
+    selectFavoriteJobs
 } = require('../controllers/job');
 
 const {
@@ -55,7 +56,7 @@ if(config.desarrollo){
     router.route('/createJob').post(createJob);
     router.route('/selectJob/:idjob/:jobmode').get(selectJob);
     router.route('/updateJob').post(updateJob);
-    router.route('/feed/:idUser').get(selectJobsByTime);
+    router.route('/feed/:idUser/:mode').get(selectJobsByTime,selectFavoriteJobs); //Mode diferencia entre el feed o favoritos
     router.route('/createJobStaff').post(uploadJobs.single('image'),createJobStaff);
     router.route('/applyingToJob').post(applyingToJob);
     router.route('/getAcceptedJobs/:idUser').get(getAcceptedJobs,addUsersToJobs);

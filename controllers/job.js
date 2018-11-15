@@ -22,8 +22,10 @@ module.exports={
     getJobApplicants: getJobApplicants,
     acceptApplicant: acceptApplicant,
     deleteApplicant: deleteApplicant,
+    addToFavorites: addToFavorites,
+    selectFavoriteJobs: selectFavoriteJobs,
     getJobTeamMembers: getJobTeamMembers,
-    addToFavorites: addToFavorites
+    
 }
 
 
@@ -177,6 +179,7 @@ function addToFavorites(req,res,next){
 //Podria hacerlo en una sentencia sql, tomarlo en cuenta
 function selectJobsByTime(req,res,next){
     idUser = req.params.idUser;
+    mode = req.params.mode; // Si "feed" entnces cargar el feed, si "fav" carga la de favoritos 
     //Siempre necesito enviar un dato de confirmacion para actualizar la informacion
 
     var sql = 'SELECT us.*, us.id as idemployer, j.*,j.id as idjob FROM jobs as j INNER JOIN userjumps as us ON (j.idemployer = us.id) and (us.id <> ?) ORDER BY "j"."updatedAt" DESC LIMIT 10';
@@ -200,10 +203,14 @@ function selectJobsByTime(req,res,next){
             numbervacancies: uj.numbervacancies
         } )
 
-        if(config.desarrollo){
+        if(mode == "feed"){
             return res.status(200).send(data); 
-        }else{
-            req.body = data;
+        }else if (mode == "fav"){
+            dataForNext = { 
+                idUser: idUser,
+                rawJobs: data
+            }
+            req.body = dataForNext;
             next();
         }
 
@@ -211,6 +218,23 @@ function selectJobsByTime(req,res,next){
         return res.status(500).send ('Server Error with Jobs In Course');
     }); 
 }
+
+function selectFavoriteJobs(req, res, next){
+    rawJobs = req.body.rawJobs;
+    idUser = req.body.idUser;
+
+    FavoriteJob.findAll({where: {idemployee: idUser}}).then(favJobs => {
+        if(!favJobs){
+            return res.status(404).send ('FavJobs not found');
+        }
+        idFavJobs = favJobs.map(favJob => favJob.idjob);
+        jobs = rawJobs.filter( rawJob => idFavJobs.includes(rawJob.idjob))
+        return res.status(200).send(jobs);
+    }).catch(err => {
+        return res.status(500).send ('Server Error with Favorite Jobs');
+    });
+}
+
 
 //EMPLEADOR O JEFE
 // Trabajos en espera y en curso de acuerdo al estado
