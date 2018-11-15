@@ -23,7 +23,9 @@ module.exports={
     acceptApplicant: acceptApplicant,
     deleteApplicant: deleteApplicant,
     addToFavorites: addToFavorites,
-    selectFavoriteJobs: selectFavoriteJobs
+    selectFavoriteJobs: selectFavoriteJobs,
+    getJobTeamMembers: getJobTeamMembers,
+    
 }
 
 
@@ -397,7 +399,7 @@ function getAcceptedJobs(req,res,next){
     });
 }
 
-
+//
 function getJobApplicants(req,res,next){
     idJob = req.params.idJob;
  
@@ -430,6 +432,43 @@ function getJobApplicants(req,res,next){
 
     }).catch(err => {
         return res.status(500).send ({err, mesg:'Server Error with List of Applicants'});
+    });
+    
+}
+
+//Funcion para obtener los miembros de un equipo de trabajo
+
+function getJobTeamMembers(req,res,next){
+    idJob = req.params.idJob;
+ 
+    var sql = 'SELECT * FROM userjumps INNER JOIN (SELECT * from employeejobs where idjob = ? and state=2) ej ON (id = ej.idemployee) ORDER BY "ej"."updatedAt" DESC LIMIT 10'
+    sequelize.query(sql,
+        { replacements: [idJob], type: sequelize.QueryTypes.SELECT}).then(applicants =>{
+        if (!applicants){
+            return res.status(404).send ('Members of Job not found');
+        }
+
+        data = applicants.map(uj =>        block = {            
+            idemployee: uj.id,
+            name: uj.name + " " + uj.lastname,
+            image: uj.image,
+            idjob: uj.idjob,         
+            rank: uj.rank,
+            salary: uj.salary,
+            counteroffer:  uj.counteroffer,
+            postedreason:    uj.postedreason,
+            counterofferreason:  uj.counterofferreason
+        } )
+
+        if(config.desarrollo){
+            return res.status(200).send(data); 
+        }else{
+            req.body = data;
+            next();
+        }
+
+    }).catch(err => {
+        return res.status(500).send ({err, mesg:'Server Error with getJobTeamMembers'});
     });
     
 }

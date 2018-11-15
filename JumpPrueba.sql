@@ -117,7 +117,7 @@ insert into employeejobs values
 (2,1,1,null,null,100,null,default,default,current_timestamp,current_timestamp),
 (2,3,1,null,null,70,null,default,default,current_timestamp,current_timestamp),
 (3,2,2,null,null,50,null,default,default,current_timestamp,current_timestamp),
-(3,3,2,null,null,90,null,default,default,current_timestamp,current_timestamp),
+(3,1,2,null,null,90,null,default,default,current_timestamp,current_timestamp),
 (4,3,3,null,null,50,null,default,default,current_timestamp,current_timestamp);
  
 insert into favoritejobs values
