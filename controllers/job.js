@@ -309,7 +309,7 @@ function getApplyingJobs(req,res,next){
         if (!Applyingjobs){
             return res.status(404).send (' Applying Jobs not found');
         }
-
+        console.log(Applyingjobs)
         data = Applyingjobs.map(uj =>        block = {
             idemployer: uj.idemployer,    //Para cargar el perfil del empleado una vez de click
             idjob: uj.id,          //Para cargar la info del trabajo una vez de click
@@ -321,9 +321,12 @@ function getApplyingJobs(req,res,next){
             dateend: uj.dateend,
             numbervacancies: uj.numbervacancies
         } )
-
+        if(Applyingjobs == ''){
+            return res.status(200).send(data)        
+        }else{   
             req.body = data;
             next();
+        }
 
     }).catch(err => {
         return res.status(500).send ('Server Error with Applying Jobs');
@@ -359,9 +362,9 @@ function getAcceptedJobs(req,res,next){
             numbervacancies: uj.numbervacancies
         } )
 
-        if(config.desarrollo){
-            return res.status(200).send(data); 
-        }else{
+        if(WorkingJobs == ''){
+            return res.status(200).send(data)        
+        }else{   
             req.body = data;
             next();
         }
@@ -384,7 +387,7 @@ function getJobApplicants(req,res,next){
 
         data = applicants.map(uj =>        block = {
             
-            id: uj.id,
+            idemployee: uj.id,
             name: uj.name + " " + uj.lastname,
             image: uj.image,
             idjob: uj.idjob,         

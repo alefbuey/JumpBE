@@ -48,7 +48,7 @@ function addUsersToJobs(req,res,next){
         }
 
     }).catch(err => {
-        return res.status(500).send ('Server Error in getImageById');
+        return res.status(500).send ('Server Error in addUsersToJobs');
     });
 }
 
