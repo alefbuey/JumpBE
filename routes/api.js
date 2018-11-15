@@ -48,7 +48,6 @@ if(config.desarrollo){
     router.route('/register').post(register);
     router.route('/profile/:idUser').get(selectUserById);
     router.route('/updateUser').post(uploadProfile.single('image'),updateUserById);
-    //router.route('/getImageById/:idUser').get(getImageById);
 
     //job
     router.route('/createJob').post(createJob);
