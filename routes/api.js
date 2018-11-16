@@ -37,7 +37,10 @@ const {
 const {
     selectUserById,
     updateUserById,
-    addUsersToJobs
+    addUsersToJobs,
+    savePayment,
+    saveComment,
+    saveRank
 } = require('../controllers/user');
 
 const {
@@ -51,6 +54,9 @@ if(config.desarrollo){
     router.route('/register').post(register);
     router.route('/profile/:idUser').get(selectUserById);
     router.route('/updateUser').post(uploadProfile.single('image'),updateUserById);
+    router.route('/savePayment').post(savePayment);
+    router.route('/saveComment').post(saveComment);
+    router.route('/saveRank').post(saveRank);
 
     //job
     router.route('/createJob').post(createJob);

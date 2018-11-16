@@ -113,12 +113,12 @@ insert into employeestates values
 (default, 'Done', current_timestamp,current_timestamp);
 
 insert into employeejobs values
-(4,2,1,null,null,50,null,default,default,2,default,current_timestamp,current_timestamp),
-(2,1,1,null,null,100,null,default,default,2,default,current_timestamp,current_timestamp),
-(2,3,1,null,null,70,null,default,default,1,default,current_timestamp,current_timestamp),
-(3,2,2,null,null,50,null,default,default,2,default,current_timestamp,current_timestamp),
-(3,1,2,null,null,90,null,default,default,1,default,current_timestamp,current_timestamp),
-(4,3,3,null,null,50,null,default,default,1,default,current_timestamp,current_timestamp);
+(default,4,2,1,null,null,50,null,default,default,2,default,current_timestamp,current_timestamp),
+(default,2,1,1,null,null,100,null,default,default,2,default,current_timestamp,current_timestamp),
+(default,2,3,1,null,null,70,null,default,default,1,default,current_timestamp,current_timestamp),
+(default,3,2,2,null,null,50,null,default,default,2,default,current_timestamp,current_timestamp),
+(default,3,1,2,null,null,90,null,default,default,1,default,current_timestamp,current_timestamp),
+(default,4,3,3,null,null,50,null,default,default,1,default,current_timestamp,current_timestamp);
  
 insert into favoritejobs values
 (1,1,current_timestamp,current_timestamp),

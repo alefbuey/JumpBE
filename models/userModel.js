@@ -26,7 +26,7 @@ const User = sequelize.define('userjumps', {
     rank                    : {type: Sequelize.DECIMAL(2, 1), defaultValue: 0.0},
     about                   : Sequelize.STRING(500),
     image                   : {type: Sequelize.STRING, defaultValue: "uploads/profiles/default.png"},
-    cellphone               : Sequelize.STRING(20)
+    cellphone               : Sequelize.STRING(20)   
 });
 
 const LocationJump = sequelize.define('location',{
@@ -70,7 +70,7 @@ User.hasOne(Employee,{foreignKey: "id"});
 Employee.hasMany(EmployeeJob,{foreignKey: "idemployee"});
 Employee.hasMany(FavoriteJob,{foreignKey: "idemployee"});
 User.hasMany(Preference,{foreignKey: "iduser"})
-User.hasMany(CommentUser,{foreignKey: "iduser"})
+Employee.hasMany(CommentUser,{foreignKey: "idemployee"})
 
 
 module.exports={

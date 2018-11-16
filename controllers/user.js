@@ -4,11 +4,18 @@ var fs = require('fs');
 const {zipwith} = require("zipwith");
 const {Op} = require('sequelize');
 const {concat} = require('../extra/functional')
+const {EmployeeJob,Job} = require('../models/jobModel')
+const {CommentUser} = require('../models/commentModel')
+const sequelize = require('../config/dbJump');
 
 module.exports={
     selectUserById: selectUserById,
     updateUserById: updateUserById,
-    addUsersToJobs: addUsersToJobs
+    addUsersToJobs: addUsersToJobs,
+    savePayment: savePayment,
+    saveComment: saveComment,
+    saveRank: saveRank
+
 }
 
 //OBTENER LA IMAGEN POR ID
@@ -80,4 +87,81 @@ function updateUserById(req,res,next){
     }).catch(err => {
         return res.status(500).send ('Server Error in Update UserJump');
     });
+}
+
+function savePayment(req,res,next){
+    salary = req.body.salary;
+    iduser = req.body.idemployee;
+    idJob = req.body.idjob;
+    User.update({availablemoney: sequelize.literal('availablemoney + ' + salary.toString())},{where: {id: iduser}}).then(()=>{
+        EmployeeJob.update({state: 3},{where: {idemployee: iduser, idjob: idJob}}).then(()=>{
+            Job.update({state: 4},{where:{id:idJob}}).then(()=>{
+                return res.status(200).send({status: 'success'});
+            }).catch(err => {
+                return res.status(500).send ('Server Error in Job Update savePayment');
+            });
+        }).catch(err => {
+            return res.status(500).send ('Server Error in Update savePayment');
+        });
+    }).catch(err => {
+        return res.status(500).send ('Server Error in Update savePayment');
+    });
+}
+
+function saveComment(req,res,next){
+    idJob = req.body.idjob
+    idEmployee = req.body.idemployee
+    comment = req.body.comment
+    toWho = req.body.toWho
+    if(toWho == 'employee'){
+        updateOrCreate(
+            CommentUser,
+            {idjob: idJob, idemployee: idEmployee},
+            {commentToEmployee: comment, idjob: idJob, idemployee:  idEmployee},
+            res
+            );
+    }else if(toWho == 'employer'){
+        updateOrCreate(
+            CommentUser,
+            {idjob: idJob, idemployee: idEmployee},
+            {commentToEmployer: comment, idjob: idJob, idemployee:  idEmployee},
+            res
+            );
+    }
+
+}
+
+function saveRank(req,res,next){
+    idJob = req.body.idjob;
+    idEmployee = req.body.idemployee;
+    payload = req.body.payload;
+
+    EmployeeJob.update(payload,{where:{idjob: idJob, idemployee: idEmployee}}).then(()=>{
+        return res.status(200).send({status: 'success'});
+    }).catch(err => {
+        return res.status(500).send ('Server Error in saveComment');
+    });
+
+}
+
+function updateOrCreate(model, where, newItem,res) {
+    // First try to find the record
+    return model
+    .findOne({where: where})
+    .then((foundItem) => {
+        if (!foundItem) {
+            // Item not found, create a new one
+            return model
+                .create(newItem)
+                .then(()=>{
+                    return res.status(200).send({status: 'success'});
+                })
+        }
+         // Found an item, update it
+        return model
+            .update(newItem, {where: where})
+            .then(()=>{
+                return res.status(200).send({status: 'success'});
+            }) ;
+    })
 }
