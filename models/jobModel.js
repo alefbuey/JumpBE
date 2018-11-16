@@ -18,6 +18,7 @@ const Job = sequelize.define('job',{
     dateend         :	Sequelize.DATE,	
     datepostend     :   Sequelize.DATE,	
     numbervacancies :	Sequelize.INTEGER,
+    numbermilestones :  {type: Sequelize.INTEGER, defaultValue: 0},
     principalImage  : {type: Sequelize.STRING, defaultValue: "uploads/jobs/default.png"}
 });
 
@@ -45,7 +46,16 @@ const EmployeeJob = sequelize.define('employeejob',{
     salary	            :	Sequelize.DECIMAL(9,1),
     counteroffer	    :	Sequelize.DECIMAL(9,1),
     postedreason	    :	{type: Sequelize.TEXT, defaultValue : "Not Specified"},
-    counterofferreason	:   {type: Sequelize.STRING(100), defaultValue : "Not Specified"}
+    counterofferreason	:   {type: Sequelize.STRING(100), defaultValue : "Not Specified"},
+    currentMilestone    :   {type: Sequelize.INTEGER, defaultValue: 0},
+    position            :   {type: Sequelize.STRING, defaultValue: " Trabajador Principal "}
+});
+
+const Milestone = sequelize.define('milestone',{
+    id                  :   {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
+    idemployee          :   Sequelize.INTEGER,
+    idjob	            :	Sequelize.INTEGER,
+    field               :   {type: Sequelize.STRING}
 });
 
 const FavoriteJob = sequelize.define('favoritejob',{
@@ -66,7 +76,8 @@ EmployeeState.hasMany(EmployeeJob,{foreignKey: 'state'});
 Job.hasMany(EmployeeJob,{foreignKey: 'idjob'});
 Job.hasMany(FavoriteJob,{foreignKey: 'idjob'})
 Job.hasMany(JobStaff,{foreignKey: "idjob"});
-Job.hasMany(CommentUser,{foreignKey: "idjob"})
+Job.hasMany(CommentUser,{foreignKey: "idjob"});
+EmployeeJob.hasMany(Milestone)
 module.exports = {
     Job: Job,
     JobState: JobState,

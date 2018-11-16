@@ -31,6 +31,7 @@ const {
     acceptApplicant,
     deleteApplicant,
     addToFavorites,
+    getEmployeeJobStatus,
     selectFavoriteJobs
 } = require('../controllers/job');
 
@@ -68,7 +69,7 @@ if(config.desarrollo){
     router.route('/acceptApplicant').post(acceptApplicant);
     router.route('/deleteApplicant').post(deleteApplicant);
     router.route('/addToFavorites').post(addToFavorites);
-
+    router.route('/employeeJobStatus/:idJob/:idEmployee').get(getEmployeeJobStatus);
 
     //Comment
     router.route('/createComment').post(createComment);
