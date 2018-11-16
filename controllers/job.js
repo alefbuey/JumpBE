@@ -23,9 +23,71 @@ module.exports={
     acceptApplicant: acceptApplicant,
     deleteApplicant: deleteApplicant,
     getJobTeamMembers: getJobTeamMembers,
-    addToFavorites: addToFavorites
+    addToFavorites: addToFavorites,
+    getEmployeeJobStatus: getEmployeeJobStatus
 }
 
+//
+
+function getEmployeeJobStatus(req,res,next){
+    idjob = req.params.idJob;
+    idemployee = req.params.idEmployee;
+
+    EmployeeJob.findOne({where:{
+        idjob: idjob,
+        idemployee: idemployee
+    }}).then(employeeJob =>{
+        if (!employeeJob){
+            return res.status(404).send ('EmployeeJob EmployeeJob not found');
+        }
+
+        User.findOne({where:{id: idemployee}}).then(employee =>{
+            if (!employee){
+                return res.status(404).send ('EmployeeJob User not found');
+            }
+
+            Job.findOne({attributes: ['idemployer','title','numbermilestones']},{where:{id: idjob}}).then(job=>{
+                if (!job){
+                    return res.status(404).send ('EmployeeJob Job not found');
+                }
+                User.findOne({where: {id: job.idemployer}}).then(employer=>{
+                    data = {
+                        idjob: employeeJob.idjob,
+                        jobtitle: job.title,
+                        idemployee: employeeJob.idemployee,
+                        employeeName: employee.name + " " + employee.lastname,
+                        employeeImage: employee.image,
+                        employeeRank: employee.rank,
+                        salary: employeeJob.salary,
+                        counteroffer: employeeJob.counteroffer,
+                        postedreason: employeeJob.postedreason,
+                        counterofferreason: employeeJob.counterofferreason,
+                        currentMilestone: employeeJob.currentMilestone,
+                        position: employeeJob.position,
+                        numbermilestones: job.numbermilestones,
+                        idemployer: employer.id,
+                        employerName: employer.name+ " "+ employer.lastname,
+                        employerImage: employer.image,
+                        employerRank: employer.rank,
+                    }
+        
+                    return res.status(200).send(data); 
+                })
+
+            }).catch(err => {
+                return res.status(500).send ('Server Error in getEmployeeJobStatus');
+            });
+
+
+
+        }).catch(err => {
+            return res.status(500).send ('Server Error in getEmployeeJobStatus');
+        });
+
+    }).catch(err => {
+        return res.status(500).send ('Server Error in getEmployeeJobStatus');
+    });
+}
 
 //Aceptar Trabajo
 //Cambiar estado en employeeJob del aplicante aceptado
