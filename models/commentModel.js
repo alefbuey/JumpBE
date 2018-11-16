@@ -5,8 +5,9 @@ const sequelize = require('../config/dbJump');
 const CommentUser = sequelize.define("commentUser",{
     id          : {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
     idjob       : Sequelize.INTEGER,
-    iduser      : Sequelize.INTEGER,
-    comment     : Sequelize.STRING,
+    idemployee  : Sequelize.INTEGER,
+    commentToEmployee     : Sequelize.STRING,
+    commentToEmployer     : Sequelize.STRING,
     postedDate  : { type: Sequelize.DATE, defaultValue: Sequelize.NOW }
 });
 

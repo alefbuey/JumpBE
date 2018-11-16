@@ -38,8 +38,9 @@ const EmployeeState = sequelize.define('employeestate',{
 });
 
 const EmployeeJob = sequelize.define('employeejob',{
-    idemployee          :   {type: Sequelize.INTEGER, primaryKey: true},
-    idjob	            :	{type: Sequelize.INTEGER, primaryKey: true},
+    id                  :   {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
+    idemployee          :   Sequelize.INTEGER,
+    idjob	            :	Sequelize.INTEGER,
     state	            :	{type: Sequelize.INTEGER, defaultValue: 1},
     rankEmployer	    :   Sequelize.DECIMAL(2,1),
     rankEmployee        :	Sequelize.DECIMAL(2,1),
@@ -53,8 +54,6 @@ const EmployeeJob = sequelize.define('employeejob',{
 
 const Milestone = sequelize.define('milestone',{
     id                  :   {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
-    idemployee          :   Sequelize.INTEGER,
-    idjob	            :	Sequelize.INTEGER,
     field               :   {type: Sequelize.STRING}
 });
 
@@ -77,7 +76,8 @@ Job.hasMany(EmployeeJob,{foreignKey: 'idjob'});
 Job.hasMany(FavoriteJob,{foreignKey: 'idjob'})
 Job.hasMany(JobStaff,{foreignKey: "idjob"});
 Job.hasMany(CommentUser,{foreignKey: "idjob"});
-EmployeeJob.hasMany(Milestone)
+EmployeeJob.hasMany(Milestone,{foreignKey: "id"});
+
 module.exports = {
     Job: Job,
     JobState: JobState,
