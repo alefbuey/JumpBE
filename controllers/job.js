@@ -465,7 +465,7 @@ function getAcceptedJobs(req,res,next){
 function getJobApplicants(req,res,next){
     idJob = req.params.idJob;
  
-    var sql = 'SELECT * FROM userjumps INNER JOIN (SELECT * from employeejobs where idjob = ? and state=1) ej ON (id = ej.idemployee) ORDER BY "ej"."updatedAt" DESC LIMIT 10'
+    var sql = 'SELECT * FROM userjumps as u INNER JOIN (SELECT * from employeejobs where idjob = ? and state=1) ej ON (u.id = ej.idemployee) ORDER BY "ej"."updatedAt" DESC LIMIT 10'
     sequelize.query(sql,
         { replacements: [idJob], type: sequelize.QueryTypes.SELECT}).then(applicants =>{
         if (!applicants){
@@ -503,7 +503,7 @@ function getJobApplicants(req,res,next){
 function getJobTeamMembers(req,res,next){
     idJob = req.params.idJob;
  
-    var sql = 'SELECT * FROM userjumps INNER JOIN (SELECT * from employeejobs where idjob = ? and state=2) ej ON (id = ej.idemployee) ORDER BY "ej"."updatedAt" DESC LIMIT 10'
+    var sql = 'SELECT * FROM userjumps as u INNER JOIN (SELECT * from employeejobs where idjob = ? and state=2) ej ON (u.id = ej.idemployee) ORDER BY "ej"."updatedAt" DESC LIMIT 10'
     sequelize.query(sql,
         { replacements: [idJob], type: sequelize.QueryTypes.SELECT}).then(applicants =>{
         if (!applicants){
