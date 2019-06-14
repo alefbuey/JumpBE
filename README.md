@@ -1,13 +1,18 @@
-## Para crear la base de de datos
+# Jump BackEnd
 
-Descomentar la linea en dbJump.js
+Is a web service developed on NodeJs with Postgresql for a freelancer app.
+
+## Getting Started
+
+In order to create de DataBase, uncomment the line in dbJump.js
 
     sequelize.sync({force: true})
 
-Correr una vez el programa y volver a comentar. Adicionalmente, correr el JumpPrueba.sql para tener
-datos con los cuales probar la aplicación. Además, en esta parte se encuentran algunos triggers necesarios.
+Run once the program and comment again. Also, run the file JumpPrueba.sql in order to get the sample data for proving the app.
+In the last file, thre are some needed triggers.
 
-## CRUD de user
+
+## CRUD of user
 
 ##select
 
@@ -30,7 +35,7 @@ datos con los cuales probar la aplicación. Además, en esta parte se encuentran
 "idlocation": "4"
 }
 ```
-## CRUD de job.
+## CRUD of job.
 
 ##select
 ```json
@@ -64,3 +69,8 @@ datos con los cuales probar la aplicación. Además, en esta parte se encuentran
 	}
 }
 ```
+
+## Authors
+
+* **Oscar Guarnizo**
+* **Fernando Zhapa**
