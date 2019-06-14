@@ -72,5 +72,5 @@ In the last file, thre are some needed triggers.
 
 ## Authors
 
-* **Oscar Guarnizo**
-* **Fernando Zhapa**
+* **Oscar Guarnizo** (ZosoV)
+* **Fernando Zhapa**  (ferynando)
